@@ -1253,10 +1253,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SpaceshipMovement
   hunter: {fileID: 0}
   target: {fileID: 1457890430}
-  maxForce: 50
-  mass: 1
-  maxSpeed: 50
-  brakingDistane: 300
+  maxForce: 200
+  mass: 10
+  maxSpeed: 100
+  acceleration: 15
+  brakingDistance: 0
+  maxSteeringAngle: 90
+  driftDamping: 2
+  rollAmount: 180
+  rotationSmooth: 2
 --- !u!65 &1913770526
 BoxCollider:
   m_ObjectHideFlags: 0

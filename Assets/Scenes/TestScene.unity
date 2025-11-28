@@ -1251,17 +1251,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1956aee43d3e1a942b741ff05d198a8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpaceshipMovement
-  hunter: {fileID: 0}
-  target: {fileID: 1457890430}
-  maxForce: 200
-  mass: 10
+  steering: {fileID: 1913770529}
   maxSpeed: 100
-  acceleration: 15
+  acceleration: 30
   brakingDistance: 0
-  maxSteeringAngle: 90
+  turnRate: 3
   driftDamping: 2
-  rollAmount: 180
-  rotationSmooth: 2
+  driftDampingFactor: 1
+  bankAmount: 60
+  bankSmooth: 3
+  useLeadPursuit: 0
+  predictionTime: 0.5
 --- !u!65 &1913770526
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1283,6 +1283,36 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 10.846234, y: 2.0413668, z: 9.860405}
   m_Center: {x: -0.000000022244272, y: 0.46149504, z: -0.56979775}
+--- !u!114 &1913770529
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1913770522}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59140cdc447468044929f4eeb7b723d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SteeringAgent
+  seekWeight: 1
+  arriveWeight: 0
+  fleeWeight: 0
+  wanderWeight: 0
+  avoidWeight: 0
+  cohesionWeight: 0
+  separationWeight: 0
+  alignmentWeight: 0
+  seekTarget: {fileID: 1457890430}
+  fleeTarget: {fileID: 0}
+  arriveRadius: 15
+  avoidDistance: 15
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 0
+  groupCenter: {x: 0, y: 0, z: 0}
+  groupDirection: {x: 0, y: 0, z: 0}
+  neighborPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &2026722610 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1767192433, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
@@ -1512,6 +1542,9 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f7c4c6f2b1ee9f645ba20c832f006358, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1913770529}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f7c4c6f2b1ee9f645ba20c832f006358, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1913770523}

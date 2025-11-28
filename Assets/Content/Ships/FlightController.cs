@@ -1,49 +1,60 @@
 using UnityEngine;
 using UnityEngine.Serialization;
 
-public class SpaceshipMovement : MonoBehaviour
+public class FlightController : MonoBehaviour
 {
     [Header("References")]
     
+    public SteeringAgent steering;
     
-    [SerializeField] private Transform hunter;
-    [SerializeField] private Transform target;
+    //[SerializeField] private Transform hunter;
+    //[SerializeField] private Transform target;
 
-    [Header("Flight Settings")]
+    [Header("Speed")]
+    
     [SerializeField] private float maxSpeed = 20f;
     [SerializeField] private float acceleration = 15;
-    
     [SerializeField] private float brakingDistance = 10f;
-    
+   
+    [Header("Turning")]
+    // How fast the ship can rotate towards its desired target direction
+    public float turnRate = 3f;          
     // Higher values will lead to decreased drift during turns
     [SerializeField][Range(1.0f, 5.0f)] private float driftDamping = 2f;
     // Set this to 0 to prevent sideways drift while the ship turns
     [SerializeField][Range(0.0f, 1.0f)] private float driftDampingFactor = 1f;
 
     [Header("Banking")]
-    [SerializeField] private float rollAmount = 45f;
-    [SerializeField] private float rotationSmooth = 2f;
+    // Maximal banking angle during turns
+    [SerializeField] private float bankAmount = 60f;
+    // How fast the ship will bank 
+    [SerializeField] private float bankSmooth = 3f;
 
+    [Header("Lead Pursuit")] 
+    public bool useLeadPursuit = false;
+    public float predictionTime = 0.5f;  // How far ahead to lead the target
     
     private Vector3 _velocity;
 
     void Update()
     {
-        Vector3 seekDirection = Seek();
-        Vector3 avoidDirection = Avoid();
-        Vector3 wanderDirection = Wander();
-        
-        // Add the different steering directions and normalize the result to obtain the overall desired direction
-        // Option to add weights later on
-        Vector3 steeringDirection = (seekDirection * 1.0f + 
-                                     avoidDirection * 1.0f + 
-                                     wanderDirection * 1.0f).normalized;
+        // Obtain the desired steering direction from the steering agent
+        Vector3 steeringDirection = steering ? steering.SteeringDirection : Vector3.forward;
         
         // Apply rotation based on accumulated steering direction
         RotateTowards(steeringDirection);
-
-        // Independent of rotation, propel the ship forward 
-        MoveForward();
+        
+        // Apply banking based on steering direction
+        ApplyBanking(steeringDirection);
+        
+        // Calculate velocity based acceleration, top speed etc. (independent of rotation)
+        UpdateVelocity();
+        
+        // Damp sideways drift
+        ApplyDriftDamping();
+        
+        // Actually move the ship
+        Move();
         
     }
 
@@ -56,37 +67,34 @@ public class SpaceshipMovement : MonoBehaviour
         transform.rotation = Quaternion.Slerp(
             transform.rotation,
             targetRot,
-            Time.deltaTime * rotationSmooth
+            Time.deltaTime * turnRate
         );
     }
 
-    // Returns direction towards target position
-    private Vector3 Seek()
+    private void ApplyBanking(Vector3 targetDirection)
     {
-        Vector3 seekDirection = Vector3.zero;
-        if (target != null)
-        {
-            seekDirection = (target.position - transform.position).normalized;
-        }
-        return seekDirection;
+        Vector3 localDirection = transform.InverseTransformDirection(targetDirection);
+        float bankingAngle = Mathf.Clamp(-localDirection.x, -1f, 1f) * bankAmount;
+        Quaternion bankRotation = Quaternion.Euler(0f, 0f, bankingAngle);
+
+        transform.rotation = Quaternion.Slerp(
+            transform.rotation,
+            transform.rotation * bankRotation,
+            Time.deltaTime * bankSmooth
+        );
     }
 
-    private Vector3 Avoid()
+    private void UpdateVelocity()
     {
-        return Vector3.zero;
-    }
-
-    private Vector3 Wander()
-    {
-        return Vector3.zero;
-    }
-
-    private void MoveForward()
-    {
+        _velocity += transform.forward * (acceleration * Time.deltaTime);
+        _velocity = Vector3.ClampMagnitude(_velocity, maxSpeed);
+        
+        /*
         // Determine target speed 
         // Related to seek behavior, if we're close to the target, slow down
 
-        float targetSpeed = maxSpeed;
+        // If we have no target, we wander about with half speed
+        float targetSpeed = maxSpeed * 0.5f;
         if (target != null)
         {
             float distance = Vector3.Distance(transform.position, target.position);
@@ -96,10 +104,14 @@ public class SpaceshipMovement : MonoBehaviour
             }
         }
         
-        // Accelerate the spaceship until we hit max speed and clamp it there
+        // Accelerate the spaceship until we hit target speed and clamp it there
         _velocity += transform.forward * (acceleration * Time.deltaTime);
         _velocity = Vector3.ClampMagnitude(_velocity, targetSpeed);
+        */
+    }
 
+    private void ApplyDriftDamping()
+    {
         // Allow for some sideways drift but damp it
         
         // Break velocity into forward and sideways components
@@ -109,8 +121,12 @@ public class SpaceshipMovement : MonoBehaviour
 
         // Dampen sideways drift
         _velocity = forwardVelocity + lateralVelocity * (1f - driftDamping * Time.deltaTime) * driftDampingFactor;
-        
+    }
+    
+    private void Move()
+    {
         // Actually move the ship transform
         transform.position += _velocity * Time.deltaTime;
+
     }
 }

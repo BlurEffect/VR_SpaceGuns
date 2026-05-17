@@ -11,15 +11,19 @@ public struct ProjectileData
     public float lifetime;
     public Color color;
     public int projectileID;
-        
-    public ProjectileData(int projectileID, Vector3 position, Vector3 direction, float speed, float lifetime, Color color)
+    public float shieldDamage;
+    public float hullDamage;
+
+    public ProjectileData(int projectileID, Vector3 position, Vector3 direction, float speed, float lifetime, Color color, float shieldDamage, float hullDamage)
     {
         this.projectileID = projectileID;
         this.position = position;
         this.direction = direction;
         this.speed = speed;
-        this.lifetime = lifetime;   
+        this.lifetime = lifetime;
         this.color = color;
+        this.shieldDamage = shieldDamage;
+        this.hullDamage = hullDamage;
     }
 }
 
@@ -52,10 +56,10 @@ public class ProjectileManager : MonoBehaviour
     
     //--------------------------------------- Management ---------------------------------------------------
 
-    public void SpawnProjectile(Vector3 position, Vector3 direction, float speed, Color color, float lifetime)
+    public void SpawnProjectile(Vector3 position, Vector3 direction, float speed, Color color, float lifetime, float shieldDamage, float hullDamage)
     {
         TurretVFXManager.Instance.SpawnTracer(projectileCount, position, direction, speed, color);
-        _projectiles.Add(new ProjectileData(projectileCount, position, direction, speed, lifetime, color));
+        _projectiles.Add(new ProjectileData(projectileCount, position, direction, speed, lifetime, color, shieldDamage, hullDamage));
         projectileCount = (projectileCount + 1) % maxProjectiles;
     }
     
@@ -70,9 +74,8 @@ public class ProjectileManager : MonoBehaviour
             RaycastHit hit;
             if (Physics.Raycast(projectile.position, projectile.direction, out hit, moveDistance, projectileLayerMask))
             {
-                // Projectile hit something
-                Debug.Log("Hit on: " + hit.collider.gameObject.name);
-                
+                hit.collider.GetComponentInParent<IDamageable>()?.TakeDamage(projectile.shieldDamage, projectile.hullDamage);
+
                 TurretVFXManager.Instance.DeleteProjectile(projectile.projectileID);
                 TurretVFXManager.Instance.SpawnProjectileImpact(hit.point, hit.normal, projectile.color);
                 _projectiles.RemoveAt(i);

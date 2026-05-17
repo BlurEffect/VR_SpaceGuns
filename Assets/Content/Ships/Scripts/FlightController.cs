@@ -38,8 +38,27 @@ public class FlightController : MonoBehaviour
 
     void Update()
     {
+        if(steering == null) return;
+        
+        steering.ComputeSteering(transform.forward, _velocity, maxSpeed);
+        
+        
+        // Apply rotation based on accumulated steering direction
+        RotateTowards(steering.desiredDirection);
+        
+        // Apply banking based on steering direction
+        ApplyBanking(steering.desiredDirection);
+        
+        Vector3 desiredVelocity = steering.desiredDirection * steering.desiredSpeed;
+        _velocity = Vector3.MoveTowards(_velocity, desiredVelocity, acceleration * Time.deltaTime);
+
+        
+        ApplyDriftDamping();
+        Move();
+        /*
         // Obtain the desired steering direction from the steering agent
         Vector3 steeringDirection = steering ? steering.SteeringDirection : Vector3.forward;
+        
         
         // Apply rotation based on accumulated steering direction
         RotateTowards(steeringDirection);
@@ -55,7 +74,7 @@ public class FlightController : MonoBehaviour
         
         // Actually move the ship
         Move();
-        
+        */
     }
 
     private void RotateTowards(Vector3 targetDirection)

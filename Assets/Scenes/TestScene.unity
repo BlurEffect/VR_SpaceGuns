@@ -1101,7 +1101,7 @@ Transform:
   m_GameObject: {fileID: 1741804638}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 139, y: 95.8, z: -343.5}
+  m_LocalPosition: {x: -4, y: 95.8, z: -286}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1295,17 +1295,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59140cdc447468044929f4eeb7b723d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SteeringAgent
-  seekWeight: 1
-  arriveWeight: 0
-  fleeWeight: 0
-  wanderWeight: 0
-  avoidWeight: 0
-  cohesionWeight: 0
-  separationWeight: 0
-  alignmentWeight: 0
+  wanderJitter: 0.5
+  wanderRadius: 1.5
+  maxSteeringAngle: 90
+  orbitRadius: 10
+  steeringSettings: {fileID: 11400000, guid: 700ed355f45916d4db42fb8d2362ccbd, type: 2}
+  steeringBehaviorProfile: {fileID: 11400000, guid: 5f6cbfd1263ae5449b058c12e87f65f9, type: 2}
   seekTarget: {fileID: 1457890430}
-  fleeTarget: {fileID: 0}
-  arriveRadius: 15
+  fleeTarget: {fileID: 1741804639}
   avoidDistance: 15
   obstacleMask:
     serializedVersion: 2

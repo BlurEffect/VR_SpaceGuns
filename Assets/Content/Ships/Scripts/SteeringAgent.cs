@@ -1,145 +1,140 @@
 using UnityEngine;
-using UnityEngine.Serialization;
 
-// Weighted blending of steering behaviors in order to determine a desired direction
+// Blends steering behaviors each frame using per-role weight profiles.
 public class SteeringAgent : MonoBehaviour
 {
-    [Header("Parameters")]
+    [Header("Profiles")]
+    public ShipSteeringProfile       steeringProfile;
+    public ShipSteeringBehaviorProfile behaviorProfile;
 
-    
-    
-    
-    public float wanderJitter = 0.5f;
-    public float wanderRadius = 1.5f;
-    public float maxSteeringAngle = 90f;
-    public float orbitRadius = 10f;
-    
-    public ShipSteeringSettings steeringSettings;
-    public ShipSteeringBehaviorProfile steeringBehaviorProfile;
-
-    [Header("Targets")]
+    [Header("Seek / Flee Targets")]
     public Transform seekTarget;
+    public Rigidbody seekTargetRigidbody;   // optional — used by Pursue and AttackRun
     public Transform fleeTarget;
+    public Rigidbody fleeTargetRigidbody;   // optional — used by Evade
 
-    [Header("Other Settings")]
-    public float avoidDistance = 15f;
-    public LayerMask obstacleMask;
+    [Header("Orbit")]
+    public float orbitRadius = 10f;         // set per engagement
 
-    // The final computed steering direction
-    public Vector3 SteeringDirection { get; private set; }
+    [Header("Containment")]
+    public Transform containmentCenter;
+    public float     containmentRadius        = 50f;
+    public float     containmentLookAheadTime =  1.5f;
 
-    // Group behavior inputs
+    [Header("Formation")]
+    public Transform formationLeader;
+    public Vector3   formationOffset;
+
+    [Header("Patrol")]
+    public Transform[] patrolWaypoints;
+
+    [Header("Group Behavior Inputs (set externally by a flock manager)")]
     public Vector3 groupCenter;
     public Vector3 groupDirection;
     public Vector3 neighborPosition;
 
-    private Vector3 wanderTarget;
-    
-    // Outputs
+    // Outputs read by FlightController
     public Vector3 desiredDirection { get; private set; }
-    public float desiredSpeed { get; private set; }
-    
+    public float   desiredSpeed     { get; private set; }
+
+    private Vector3 _wanderTarget;
+    private int     _currentWaypointIndex;
+
     public void ComputeSteering(Vector3 currentForward, Vector3 currentVelocity, float maxSpeed)
     {
-        Vector3 combinedVelocity = Vector3.zero;
+        Vector3 combined = Vector3.zero;
 
-        // Seek
-        if (steeringBehaviorProfile.seekWeight > 0f && seekTarget != null)
-        {
-            combinedVelocity += SteeringModule.Seek(transform.position, seekTarget.position, maxSpeed) * 
-                                steeringBehaviorProfile.seekWeight;
-        }
-        
-        // Flee
-        if (steeringBehaviorProfile.fleeWeight > 0f && fleeTarget != null)
-        {
-            combinedVelocity += SteeringModule.Flee(transform.position, fleeTarget.position, maxSpeed) *
-                                steeringBehaviorProfile.fleeWeight;
-        }
+        Vector3 seekVel = seekTargetRigidbody != null ? seekTargetRigidbody.linearVelocity : Vector3.zero;
+        Vector3 fleeVel = fleeTargetRigidbody != null ? fleeTargetRigidbody.linearVelocity : Vector3.zero;
 
-        // Arrive
-        if (steeringBehaviorProfile.arriveWeight > 0f && seekTarget != null)
-        {
-            combinedVelocity += SteeringModule.Arrive(transform.position, seekTarget.position, maxSpeed, steeringSettings.slowRadius, steeringSettings.arriveRadius) *
-                                steeringBehaviorProfile.arriveWeight;
-        }
+        // --- Basic ---
+        if (behaviorProfile.seekWeight > 0f && seekTarget != null)
+            combined += SteeringModule.Seek(transform.position, seekTarget.position, maxSpeed)
+                        * behaviorProfile.seekWeight;
 
+        if (behaviorProfile.fleeWeight > 0f && fleeTarget != null)
+            combined += SteeringModule.Flee(transform.position, fleeTarget.position, maxSpeed)
+                        * behaviorProfile.fleeWeight;
 
+        if (behaviorProfile.arriveWeight > 0f && seekTarget != null)
+            combined += SteeringModule.Arrive(transform.position, seekTarget.position, maxSpeed,
+                            behaviorProfile.slowRadius, behaviorProfile.arriveRadius)
+                        * behaviorProfile.arriveWeight;
 
-        
+        // --- Wander ---
+        if (behaviorProfile.wanderWeight > 0f)
+            combined += SteeringModule.Wander(currentForward, transform.up, ref _wanderTarget,
+                            steeringProfile.wanderJitter, steeringProfile.wanderRadius,
+                            steeringProfile.wanderProjectDistance, maxSpeed)
+                        * behaviorProfile.wanderWeight;
 
-        // --- WANDER ---
-        if (steeringBehaviorProfile.wanderWeight > 0f)
-        {
-            Vector3 wanderVel = SteeringModule.Wander(currentForward, ref wanderTarget, wanderJitter, wanderRadius, maxSpeed * 0.4f);
-            combinedVelocity += wanderVel * steeringBehaviorProfile.wanderWeight;
-        }
-        
-        // ORBIT
-        if (steeringBehaviorProfile.orbitWeight > 0f && seekTarget != null)
-            combinedVelocity += SteeringModule.Orbit(transform.position, seekTarget.position, currentForward, orbitRadius, maxSpeed) * steeringBehaviorProfile.orbitWeight;
+        // --- Avoidance ---
+        if (behaviorProfile.avoidWeight > 0f)
+            combined += SteeringModule.AvoidObstacles(transform,
+                            steeringProfile.avoidDistance, steeringProfile.obstacleMask, steeringProfile.shipRadius)
+                        * maxSpeed * behaviorProfile.avoidWeight;
 
-        // TODO: Current Velocity is wrong here, should be target velocity
-        // PURSUE
-        if (steeringBehaviorProfile.pursueWeight > 0f && seekTarget != null)
-            combinedVelocity += SteeringModule.Pursue(transform.position, seekTarget.position, currentVelocity, maxSpeed) * steeringBehaviorProfile.pursueWeight;
+        // --- Flocking ---
+        if (behaviorProfile.cohesionWeight > 0f)
+            combined += SteeringModule.Cohesion(transform.position, groupCenter, maxSpeed)
+                        * behaviorProfile.cohesionWeight;
 
-        // EVADE
-        if (steeringBehaviorProfile.evadeWeight > 0f && fleeTarget != null)
-            combinedVelocity += SteeringModule.Evade(transform.position, fleeTarget.position, currentVelocity, maxSpeed) * steeringBehaviorProfile.evadeWeight;
+        if (behaviorProfile.separationWeight > 0f)
+            combined += SteeringModule.Separation(transform.position, neighborPosition,
+                            steeringProfile.separationDistance, maxSpeed)
+                        * behaviorProfile.separationWeight;
 
+        if (behaviorProfile.alignmentWeight > 0f)
+            combined += SteeringModule.Alignment(groupDirection, maxSpeed)
+                        * behaviorProfile.alignmentWeight;
 
-        // If negligible, keep current forward
-        if (combinedVelocity.sqrMagnitude < 0.001f)
+        // --- Targeting ---
+        if (behaviorProfile.orbitWeight > 0f && seekTarget != null)
+            combined += SteeringModule.Orbit(transform.position, seekTarget.position, orbitRadius, maxSpeed)
+                        * behaviorProfile.orbitWeight;
+
+        if (behaviorProfile.pursueWeight > 0f && seekTarget != null)
+            combined += SteeringModule.Pursue(transform.position, seekTarget.position, seekVel, maxSpeed)
+                        * behaviorProfile.pursueWeight;
+
+        if (behaviorProfile.evadeWeight > 0f && fleeTarget != null)
+            combined += SteeringModule.Evade(transform.position, fleeTarget.position, fleeVel, maxSpeed)
+                        * behaviorProfile.evadeWeight;
+
+        if (behaviorProfile.attackRunWeight > 0f && seekTarget != null)
+            combined += SteeringModule.AttackRun(transform.position, currentForward,
+                            seekTarget.position, seekVel, maxSpeed,
+                            behaviorProfile.attackRange, behaviorProfile.breakOffRange)
+                        * behaviorProfile.attackRunWeight;
+
+        // --- Navigation ---
+        if (behaviorProfile.containmentWeight > 0f && containmentCenter != null)
+            combined += SteeringModule.Containment(transform.position, currentVelocity,
+                            containmentCenter.position, containmentRadius, containmentLookAheadTime, maxSpeed)
+                        * behaviorProfile.containmentWeight;
+
+        if (behaviorProfile.formationWeight > 0f && formationLeader != null)
+            combined += SteeringModule.Formation(transform.position, formationLeader, formationOffset,
+                            maxSpeed, behaviorProfile.slowRadius, behaviorProfile.arriveRadius)
+                        * behaviorProfile.formationWeight;
+
+        if (behaviorProfile.patrolWeight > 0f && patrolWaypoints != null && patrolWaypoints.Length > 0)
+            combined += SteeringModule.Patrol(transform.position, patrolWaypoints,
+                            ref _currentWaypointIndex, steeringProfile.waypointReachRadius, maxSpeed)
+                        * behaviorProfile.patrolWeight;
+
+        // --- Resolve ---
+        if (combined.sqrMagnitude < 0.001f)
         {
             desiredDirection = currentForward;
-            desiredSpeed = 0f;
+            desiredSpeed     = 0f;
             return;
         }
 
-        // --- Compute final desiredDirection and desiredSpeed ---
-        Vector3 finalDir = combinedVelocity.normalized;
-        finalDir = SteeringModule.ClampDirection(currentForward, finalDir, maxSteeringAngle);
-
-        desiredDirection = finalDir;
-        desiredSpeed = combinedVelocity.magnitude;
+        desiredDirection = SteeringModule.ClampDirection(currentForward, combined.normalized,
+                               steeringProfile.maxSteeringAngle);
+        desiredSpeed     = Mathf.Min(combined.magnitude, maxSpeed);
     }
-    
-    void Update()
-    {
-        /*
-        Vector3 steering = Vector3.zero;
 
-        // Blend all steering behaviors
-        if (seekWeight > 0 && seekTarget)
-            steering += SteeringModule.Seek(transform, seekTarget.position) * seekWeight;
-
-        if (arriveWeight > 0 && seekTarget)
-            steering += SteeringModule.Arrive(transform, seekTarget.position, arriveRadius) * arriveWeight;
-
-        if (fleeWeight > 0 && fleeTarget)
-            steering += SteeringModule.Flee(transform, fleeTarget.position) * fleeWeight;
-
-        if (wanderWeight > 0)
-            steering += SteeringModule.Wander(transform) * wanderWeight;
-
-        if (avoidWeight > 0)
-            steering += SteeringModule.AvoidObstacles(transform, avoidDistance, obstacleMask) * avoidWeight;
-
-        if (cohesionWeight > 0)
-            steering += SteeringModule.Cohesion(transform, groupCenter) * cohesionWeight;
-
-        if (separationWeight > 0)
-            steering += SteeringModule.Separation(transform, neighborPosition, 10f) * separationWeight;
-
-        if (alignmentWeight > 0)
-            steering += SteeringModule.Alignment(groupDirection) * alignmentWeight;
-
-        // Final normalized steering direction
-        SteeringDirection = steering.sqrMagnitude > 0.01f
-            ? steering.normalized
-            : transform.forward;  // no input = keep flying straight
-            
-            */
-    }
+    void Update() { }
 }

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1920752b68840524f95059174edfb949, type: 3}
   m_Name: HealthProfile_Turret
   m_EditorClassIdentifier: Assembly-CSharp::ShipHealthProfile
-  maxHull: 100
+  maxHull: 500
   maxShields: 50
   shieldRechargeDelay: 3
   shieldRechargeRate: 10

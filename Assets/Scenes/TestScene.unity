@@ -322,7 +322,10 @@ VisualEffect:
   m_ResourceVersion: 1
   m_PropertySheet:
     m_Float:
-      m_Array: []
+      m_Array:
+      - m_Value: 0
+        m_Name: Lifetime
+        m_Overridden: 0
     m_Vector2f:
       m_Array: []
     m_Vector3f:
@@ -594,13 +597,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42d2b638b2c641541bad86b2422e1b01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Shooting
-  pattern:
-    mode: 1
-    cooldownInterval: 3
-    projectilesPerBurst: 3
-    burstInterval: 0.2
-    projectileSpeed: 80
-  projectileColor: {r: 0, g: 32, b: 29.93145, a: 0}
+  gunProfile: {fileID: 11400000, guid: 9fe1e92e16313e047924ff6e25fbe1c4, type: 2}
   muzzleLeft: {fileID: 825404161}
   muzzleRight: {fileID: 21189941}
 --- !u!1 &956159592 stripped
@@ -648,15 +645,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42d2b638b2c641541bad86b2422e1b01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Shooting
-  pattern:
-    mode: 1
-    cooldownInterval: 3
-    projectilesPerBurst: 5
-    burstInterval: 0.2
-    projectileSpeed: 80
-  projectileColor: {r: 41.074562, g: 0, b: 42.722507, a: 0}
+  gunProfile: {fileID: 11400000, guid: cc08bf1a50e6d2a4f87ab6333e041883, type: 2}
   muzzleLeft: {fileID: 1627352044}
   muzzleRight: {fileID: 1743216890}
+--- !u!114 &956159598
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 956159592}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7537a3a875e9eb84cbd353df3b52cf8f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HealthComponent
+  profile: {fileID: 11400000, guid: 667e77d9e960a864a864e27f0426fcc5, type: 2}
+  OnShieldsDown:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDestroyed:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!4 &1019425827 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1982205349069844826, guid: 744bdba5745719e46a8e08f14c624ca8, type: 3}
@@ -826,6 +836,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 744bdba5745719e46a8e08f14c624ca8, type: 3}
       insertIndex: -1
       addedObject: {fileID: 956159596}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 744bdba5745719e46a8e08f14c624ca8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 956159598}
   m_SourcePrefab: {fileID: 100100000, guid: 744bdba5745719e46a8e08f14c624ca8, type: 3}
 --- !u!1 &1457890429
 GameObject:
@@ -1252,16 +1265,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpaceshipMovement
   steering: {fileID: 1913770529}
-  maxSpeed: 100
-  acceleration: 30
-  brakingDistance: 0
-  turnRate: 3
-  driftDamping: 2
-  driftDampingFactor: 1
-  bankAmount: 60
-  bankSmooth: 3
-  useLeadPursuit: 0
-  predictionTime: 0.5
+  flightProfile: {fileID: 11400000, guid: 73a2a2e66c8c3d9469a663e597c6ceec, type: 2}
 --- !u!65 &1913770526
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1295,21 +1299,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59140cdc447468044929f4eeb7b723d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SteeringAgent
-  wanderJitter: 0.5
-  wanderRadius: 1.5
-  maxSteeringAngle: 90
-  orbitRadius: 10
-  steeringSettings: {fileID: 11400000, guid: 700ed355f45916d4db42fb8d2362ccbd, type: 2}
-  steeringBehaviorProfile: {fileID: 11400000, guid: 5f6cbfd1263ae5449b058c12e87f65f9, type: 2}
+  steeringProfile: {fileID: 11400000, guid: 99218a05d3745a940a7833f5264ab995, type: 2}
+  behaviorProfile: {fileID: 11400000, guid: 5f6cbfd1263ae5449b058c12e87f65f9, type: 2}
   seekTarget: {fileID: 1457890430}
+  seekTargetRigidbody: {fileID: 0}
   fleeTarget: {fileID: 1741804639}
-  avoidDistance: 15
-  obstacleMask:
-    serializedVersion: 2
-    m_Bits: 0
+  fleeTargetRigidbody: {fileID: 0}
+  orbitRadius: 10
+  containmentCenter: {fileID: 0}
+  containmentRadius: 50
+  containmentLookAheadTime: 1.5
+  formationLeader: {fileID: 0}
+  formationOffset: {x: 0, y: 0, z: 0}
+  patrolWaypoints: []
   groupCenter: {x: 0, y: 0, z: 0}
   groupDirection: {x: 0, y: 0, z: 0}
   neighborPosition: {x: 0, y: 0, z: 0}
+--- !u!114 &1913770532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1913770522}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7537a3a875e9eb84cbd353df3b52cf8f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HealthComponent
+  profile: {fileID: 11400000, guid: 9b12aa62ecbf20949ba5ceaf3aa903e9, type: 2}
+  OnShieldsDown:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDestroyed:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &2026722610 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1767192433, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
@@ -1548,6 +1572,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f7c4c6f2b1ee9f645ba20c832f006358, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1913770526}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f7c4c6f2b1ee9f645ba20c832f006358, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1913770532}
     - targetCorrespondingSourceObject: {fileID: -718963097086581229, guid: f7c4c6f2b1ee9f645ba20c832f006358, type: 3}
       insertIndex: -1
       addedObject: {fileID: 902961845}

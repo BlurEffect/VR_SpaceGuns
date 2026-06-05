@@ -12,8 +12,8 @@ public class Targeting : MonoBehaviour
     [SerializeField] private Transform muzzleRight;       // Barrel - rotates vertically (pitch)
 
     [Header("Target Settings")]
-    [SerializeField] private Transform target;
-    [SerializeField] private Rigidbody targetRigidbody; // optional (for predictive aiming)
+    public Transform target;
+    public Rigidbody targetRigidbody; // optional (for predictive aiming)
 
     [Header("Aiming Settings")]
     [SerializeField] private float yawSpeed = 90f;     // degrees per second

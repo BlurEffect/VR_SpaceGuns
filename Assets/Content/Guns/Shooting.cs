@@ -3,6 +3,7 @@ using UnityEngine;
 public class Shooting : MonoBehaviour
 {
     [SerializeField] private GunProfile gunProfile;
+    public GunProfile GunProfile => gunProfile;
 
     [SerializeField] private Transform muzzleLeft;
     [SerializeField] private Transform muzzleRight;

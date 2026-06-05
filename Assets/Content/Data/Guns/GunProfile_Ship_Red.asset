@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 256e40c6f01b90549b77f65cfbbd29f7, type: 3}
-  m_Name: GunProfile_Ship
+  m_Name: GunProfile_Ship_Red
   m_EditorClassIdentifier: Assembly-CSharp::GunProfile
   mode: 0
   cooldownInterval: 0.5

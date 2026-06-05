@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1920752b68840524f95059174edfb949, type: 3}
-  m_Name: HealthProfile_Ship
-  m_EditorClassIdentifier: Assembly-CSharp::ShipHealthProfile
-  maxHull: 100
-  maxShields: 50
-  shieldRechargeDelay: 3
-  shieldRechargeRate: 10
+  m_Script: {fileID: 11500000, guid: 3921685869f9a3f4ea6a06d6de5c4fcf, type: 3}
+  m_Name: Sensors_Fighter_Red
+  m_EditorClassIdentifier: Assembly-CSharp::ShipSensorProfile
+  detectionRange: 400
+  enemyMask:
+    serializedVersion: 2
+    m_Bits: 64

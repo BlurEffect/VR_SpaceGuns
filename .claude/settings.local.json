@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem -Path \"C:\\\\Data\\\\Games\\\\VR_SpaceGuns\" -Recurse -Directory)",
+      "Bash(Select-Object -First 20 FullName)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Data\\\\Games\\\\VR_SpaceGuns\" -Directory)",
+      "Bash(Select-Object Name)"
+    ]
+  }
+}

@@ -18,6 +18,7 @@ public class GunProfile : ScriptableObject
     [Header("Projectile")]
     public float projectileSpeed = 100f;
     public float projectileLifetime = 5f;
+    public float effectiveRange = 500f;
     [ColorUsage(false, true)]
     public Color projectileColor = Color.white;
 

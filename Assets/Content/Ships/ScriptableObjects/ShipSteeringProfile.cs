@@ -21,4 +21,8 @@ public class ShipSteeringProfile : ScriptableObject
 
     [Header("Patrol")]
     public float waypointReachRadius = 3f;
+
+    [Header("Arrive")]
+    public float slowRadius   = 30f;
+    public float arriveRadius =  5f;
 }

@@ -31,10 +31,6 @@ public class ShipSteeringBehaviorProfile : ScriptableObject
     public float formationWeight   = 0f;
     public float patrolWeight      = 0f;
 
-    [Header("Arrive Params")]
-    public float slowRadius   = 30f;
-    public float arriveRadius =  5f;
-
     [Header("Attack Run Params")]
     public float attackRange   = 20f;
     public float breakOffRange =  5f;

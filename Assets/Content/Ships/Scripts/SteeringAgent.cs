@@ -25,9 +25,6 @@ public class SteeringAgent : MonoBehaviour
     public Transform formationLeader;
     public Vector3   formationOffset;
 
-    [Header("Patrol")]
-    public Transform[] patrolWaypoints;
-
     [Header("Group Behavior Inputs (set externally by a flock manager)")]
     public Vector3 groupCenter;
     public Vector3 groupDirection;
@@ -36,6 +33,8 @@ public class SteeringAgent : MonoBehaviour
     // Outputs read by FlightController
     public Vector3 desiredDirection { get; private set; }
     public float   desiredSpeed     { get; private set; }
+
+    [HideInInspector] public Transform[] patrolWaypoints;
 
     private Vector3 _wanderTarget;
     private int     _currentWaypointIndex;
@@ -58,7 +57,7 @@ public class SteeringAgent : MonoBehaviour
 
         if (behaviorProfile.arriveWeight > 0f && seekTarget != null)
             combined += SteeringModule.Arrive(transform.position, seekTarget.position, maxSpeed,
-                            behaviorProfile.slowRadius, behaviorProfile.arriveRadius)
+                            steeringProfile.slowRadius, steeringProfile.arriveRadius)
                         * behaviorProfile.arriveWeight;
 
         // --- Wander ---
@@ -115,7 +114,7 @@ public class SteeringAgent : MonoBehaviour
 
         if (behaviorProfile.formationWeight > 0f && formationLeader != null)
             combined += SteeringModule.Formation(transform.position, formationLeader, formationOffset,
-                            maxSpeed, behaviorProfile.slowRadius, behaviorProfile.arriveRadius)
+                            maxSpeed, steeringProfile.slowRadius, steeringProfile.arriveRadius)
                         * behaviorProfile.formationWeight;
 
         if (behaviorProfile.patrolWeight > 0f && patrolWaypoints != null && patrolWaypoints.Length > 0)

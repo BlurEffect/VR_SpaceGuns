@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c28d49564ce7b4b4da43c96a9cbddeda, type: 3}
+  m_Name: ShipSteeringProfile_Fighter
+  m_EditorClassIdentifier: Assembly-CSharp::ShipSteeringProfile
+  avoidDistance: 15
+  shipRadius: 5.5
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 193
+  separationDistance: 10
+  maxSteeringAngle: 90
+  wanderJitter: 0.5
+  wanderRadius: 1.5
+  wanderProjectDistance: 2
+  waypointReachRadius: 15
+  slowRadius: 30
+  arriveRadius: 5

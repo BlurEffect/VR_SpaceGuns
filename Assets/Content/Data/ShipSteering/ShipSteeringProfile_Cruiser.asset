@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c28d49564ce7b4b4da43c96a9cbddeda, type: 3}
-  m_Name: ShipSteeringProfile_Test
+  m_Name: ShipSteeringProfile_Cruiser
   m_EditorClassIdentifier: Assembly-CSharp::ShipSteeringProfile
   avoidDistance: 15
   shipRadius: 5.5
@@ -23,5 +23,5 @@ MonoBehaviour:
   wanderRadius: 1.5
   wanderProjectDistance: 2
   waypointReachRadius: 15
-  slowRadius: 30
-  arriveRadius: 5
+  slowRadius: 250
+  arriveRadius: 200

@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a656244f4e0b5164281a2a0589ccc11f, type: 3}
-  m_Name: Behavior_Patrol
+  m_Name: Behavior_Fighter_Attack
   m_EditorClassIdentifier: Assembly-CSharp::ShipSteeringProfile
   seekWeight: 0
   fleeWeight: 0
-  arriveWeight: 1
+  arriveWeight: 0
   wanderWeight: 0
   avoidWeight: 0
   cohesionWeight: 0
@@ -23,9 +23,9 @@ MonoBehaviour:
   orbitWeight: 0
   pursueWeight: 0
   evadeWeight: 0
-  attackRunWeight: 0
-  containmentWeight: 0.5
+  attackRunWeight: 1
+  containmentWeight: 0.2
   formationWeight: 0
-  patrolWeight: 1
-  attackRange: 20
-  breakOffRange: 5
+  patrolWeight: 0
+  attackRange: 100
+  breakOffRange: 50

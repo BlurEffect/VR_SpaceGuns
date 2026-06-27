@@ -15,15 +15,18 @@ public class ShipAI : MonoBehaviour
     [Header("Scan")]
     [SerializeField] private float scanInterval = 0.5f;
 
-    [Header("Turrets")]
-    [SerializeField] private Targeting[] turrets;
-    [SerializeField] private Shooting[] guns;
+    [Header("Primary Turrets")]
+    [SerializeField] private TurretMount[] primaryMounts;
+
+    [Header("Point Defense")]
+    [SerializeField] private TurretMount[] pointDefenseMounts;
 
     public Transform AssignedTarget { get; private set; }
     public SteeringAgent SteeringAgent => _steeringAgent;
 
     private SteeringAgent _steeringAgent;
     private float _scanTimer;
+    private Collider[] _scannedEnemies = System.Array.Empty<Collider>();
 
     void Awake()
     {
@@ -36,12 +39,14 @@ public class ShipAI : MonoBehaviour
         if (_scanTimer >= scanInterval)
         {
             _scanTimer = 0f;
+            ScanForEnemies();
             if (AssignedTarget == null)
-                ScanForTarget();
+                AssignedTarget = FindNearest();
         }
 
         UpdateSteering();
         UpdateTurrets();
+        UpdatePointDefenseTurrets();
     }
 
     // Called by FactionManager to override self-scan with a specific target.
@@ -56,27 +61,23 @@ public class ShipAI : MonoBehaviour
         AssignedTarget = null;
     }
 
-    private void ScanForTarget()
+    private void ScanForEnemies()
     {
         if (sensorProfile == null) return;
-
-        Collider[] hits = Physics.OverlapSphere(
+        _scannedEnemies = Physics.OverlapSphere(
             transform.position, sensorProfile.detectionRange, sensorProfile.enemyMask);
+    }
 
+    private Transform FindNearest()
+    {
         Transform nearest = null;
-        float nearestSqDist = float.MaxValue;
-
-        foreach (Collider hit in hits)
+        float nearestSq = float.MaxValue;
+        foreach (Collider hit in _scannedEnemies)
         {
-            float sqDist = (hit.transform.position - transform.position).sqrMagnitude;
-            if (sqDist < nearestSqDist)
-            {
-                nearestSqDist = sqDist;
-                nearest = hit.transform;
-            }
+            float sq = (hit.transform.position - transform.position).sqrMagnitude;
+            if (sq < nearestSq) { nearestSq = sq; nearest = hit.transform; }
         }
-
-        AssignedTarget = nearest;
+        return nearest;
     }
 
     private void UpdateSteering()
@@ -102,24 +103,60 @@ public class ShipAI : MonoBehaviour
 
     private void UpdateTurrets()
     {
-        foreach (Targeting turret in turrets)
-        {
-            if (turret == null) continue;
-            turret.target = AssignedTarget;
-            turret.targetRigidbody = AssignedTarget != null
-                ? AssignedTarget.GetComponent<Rigidbody>()
-                : null;
-        }
-
         float sqDist = AssignedTarget != null
             ? (AssignedTarget.position - transform.position).sqrMagnitude
             : float.MaxValue;
 
-        foreach (Shooting gun in guns)
+        foreach (TurretMount mount in primaryMounts)
         {
-            if (gun == null || gun.GunProfile == null) continue;
-            float range = gun.GunProfile.effectiveRange;
-            gun.enabled = AssignedTarget != null && sqDist <= range * range;
+            if (mount.targeting == null) continue;
+
+            mount.targeting.target          = AssignedTarget;
+            mount.targeting.targetRigidbody = AssignedTarget != null
+                ? AssignedTarget.GetComponent<Rigidbody>() : null;
+
+            if (mount.shooting != null && mount.shooting.GunProfile != null)
+            {
+                float range = mount.shooting.GunProfile.effectiveRange;
+                mount.shooting.enabled = AssignedTarget != null
+                    && sqDist <= range * range
+                    && mount.targeting.ReadyToFire;
+            }
         }
     }
+
+    private void UpdatePointDefenseTurrets()
+    {
+        foreach (TurretMount mount in pointDefenseMounts)
+        {
+            if (mount.targeting == null) continue;
+
+            Transform nearest = null;
+            float nearestSq = float.MaxValue;
+            foreach (Collider hit in _scannedEnemies)
+            {
+                float sq = (hit.transform.position - mount.targeting.transform.position).sqrMagnitude;
+                if (sq < nearestSq) { nearestSq = sq; nearest = hit.transform; }
+            }
+
+            mount.targeting.target = nearest;
+            mount.targeting.targetRigidbody = nearest != null
+                ? nearest.GetComponent<Rigidbody>() : null;
+
+            if (mount.shooting != null && mount.shooting.GunProfile != null)
+            {
+                float range = mount.shooting.GunProfile.effectiveRange;
+                mount.shooting.enabled = nearest != null
+                    && nearestSq <= range * range
+                    && mount.targeting.ReadyToFire;
+            }
+        }
+    }
+}
+
+[System.Serializable]
+public struct TurretMount
+{
+    public Targeting targeting;
+    public Shooting  shooting;
 }

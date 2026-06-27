@@ -29,7 +29,13 @@ public class Targeting : MonoBehaviour
     [SerializeField] private float minYaw = -45f;    // down
     [SerializeField] private float maxYaw = 45f;     // up
 
-    
+    [Header("Aim & Fire Check")]
+    [SerializeField] private float     aimThresholdDegrees = 5f;
+    [SerializeField] private LayerMask lineOfFireBlockers;
+
+    public bool IsAimed     { get; private set; }
+    public bool ReadyToFire { get; private set; }
+
     private Vector3 predictedTargetPos;
 
     void Update()
@@ -135,8 +141,24 @@ public class Targeting : MonoBehaviour
         
         //rotatorBarrelLeft.localRotation = Quaternion.Inverse(rotatorYMain.localRotation);
         //rotatorBarrelRight.localRotation = rotatorYMain.localRotation;
-        
-        
+
+        // --- Aim & line-of-fire check ---
+        if (muzzleLeft != null && muzzleRight != null)
+        {
+            Vector3 muzzleMid     = (muzzleLeft.position + muzzleRight.position) * 0.5f;
+            Vector3 muzzleForward = (muzzleLeft.forward  + muzzleRight.forward).normalized;
+            Vector3 toTarget      = predictedTargetPos - muzzleMid;
+
+            IsAimed = Vector3.Angle(muzzleForward, toTarget.normalized) <= aimThresholdDegrees;
+
+            bool clearPath = !Physics.Raycast(muzzleMid, muzzleForward, toTarget.magnitude, lineOfFireBlockers);
+            ReadyToFire = IsAimed && clearPath;
+        }
+        else
+        {
+            IsAimed     = false;
+            ReadyToFire = false;
+        }
     }
 
     void OnDrawGizmosSelected()

@@ -204,6 +204,10 @@ MonoBehaviour:
   maxPitch: 45
   minYaw: -45
   maxYaw: 45
+  aimThresholdDegrees: 5
+  lineOfFireBlockers:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!114 &4801838018848750828
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -328,10 +332,10 @@ MonoBehaviour:
   patrolProfile: {fileID: 11400000, guid: 39a2ede5b2dddce419db654b57a92819, type: 2}
   patrolWaypoints: []
   scanInterval: 0.5
-  turrets:
-  - {fileID: 417621458434883588}
-  guns:
-  - {fileID: 4801838018848750828}
+  primaryMounts:
+  - targeting: {fileID: 417621458434883588}
+    shooting: {fileID: 4801838018848750828}
+  pointDefenseMounts: []
 --- !u!4 &8538226347536478164 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2290743896764979233, guid: f7c4c6f2b1ee9f645ba20c832f006358, type: 3}

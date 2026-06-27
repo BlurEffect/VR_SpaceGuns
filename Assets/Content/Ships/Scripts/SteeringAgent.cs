@@ -36,8 +36,11 @@ public class SteeringAgent : MonoBehaviour
 
     [HideInInspector] public Transform[] patrolWaypoints;
 
-    private Vector3 _wanderTarget;
-    private int     _currentWaypointIndex;
+    private Vector3   _wanderTarget;
+    private int       _currentWaypointIndex;
+    private bool      _attackRunBreakOff;
+    private Vector3   _breakOffDir;
+    private Transform _prevSeekTarget;
 
     public void ComputeSteering(Vector3 currentForward, Vector3 currentVelocity, float maxSpeed)
     {
@@ -101,10 +104,41 @@ public class SteeringAgent : MonoBehaviour
                         * behaviorProfile.evadeWeight;
 
         if (behaviorProfile.attackRunWeight > 0f && seekTarget != null)
-            combined += SteeringModule.AttackRun(transform.position, currentForward,
-                            seekTarget.position, seekVel, maxSpeed,
-                            behaviorProfile.attackRange, behaviorProfile.breakOffRange)
-                        * behaviorProfile.attackRunWeight;
+        {
+            // Reset break-off state when target changes
+            if (seekTarget != _prevSeekTarget)
+            {
+                _prevSeekTarget    = seekTarget;
+                _attackRunBreakOff = false;
+            }
+
+            Vector3 toTarget = seekTarget.position - transform.position;
+            float   dist     = toTarget.magnitude;
+            float   dot      = Vector3.Dot(currentForward, toTarget.normalized);
+
+            // Enter break-off (sticky): triggers when within breakOffRange or target passes behind.
+            // Direction is locked at entry so it doesn't jitter as geometry changes.
+            if (!_attackRunBreakOff && (dist <= behaviorProfile.breakOffRange || dot <= 0.2f))
+            {
+                _attackRunBreakOff = true;
+                Vector3 breakRef = Mathf.Abs(dot) < 0.95f ? currentForward : Vector3.up;
+                Vector3 perp     = Vector3.Cross(toTarget.normalized, breakRef).normalized;
+                _breakOffDir     = (perp - toTarget.normalized * 0.5f).normalized;
+            }
+            // Exit break-off only once safely outside attack range for a clean re-approach
+            else if (_attackRunBreakOff && dist > behaviorProfile.attackRange)
+            {
+                _attackRunBreakOff = false;
+            }
+
+            Vector3 attackRunVel = _attackRunBreakOff
+                ? _breakOffDir * maxSpeed
+                : SteeringModule.AttackRun(transform.position, currentForward,
+                      seekTarget.position, seekVel, maxSpeed,
+                      behaviorProfile.attackRange, behaviorProfile.breakOffRange);
+
+            combined += attackRunVel * behaviorProfile.attackRunWeight;
+        }
 
         // --- Navigation ---
         if (behaviorProfile.containmentWeight > 0f && containmentCenter != null)

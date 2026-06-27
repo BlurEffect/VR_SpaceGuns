@@ -9,7 +9,7 @@ public class ShipFlightProfile : ScriptableObject
 
     [Header("Turning")]
     public float turnRate           =  3f;
-    [Range(1f, 5f)] public float driftDamping        =  2f;
+    [Range(0f, 5f)] public float driftDamping        =  2f;
     [Range(0f, 1f)] public float driftDampingFactor  =  1f;
 
     [Header("Banking")]

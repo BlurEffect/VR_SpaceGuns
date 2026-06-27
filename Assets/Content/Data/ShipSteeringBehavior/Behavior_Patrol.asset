@@ -15,8 +15,8 @@ MonoBehaviour:
   seekWeight: 0
   fleeWeight: 0
   arriveWeight: 1
-  wanderWeight: 0.3
-  avoidWeight: 0.8
+  wanderWeight: 0
+  avoidWeight: 0
   cohesionWeight: 0
   separationWeight: 0.4
   alignmentWeight: 0

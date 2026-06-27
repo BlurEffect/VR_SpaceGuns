@@ -20,6 +20,7 @@ public class ShipAI : MonoBehaviour
     [SerializeField] private Shooting[] guns;
 
     public Transform AssignedTarget { get; private set; }
+    public SteeringAgent SteeringAgent => _steeringAgent;
 
     private SteeringAgent _steeringAgent;
     private float _scanTimer;

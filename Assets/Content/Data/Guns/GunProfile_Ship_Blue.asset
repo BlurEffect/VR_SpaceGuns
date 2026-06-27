@@ -18,6 +18,7 @@ MonoBehaviour:
   burstInterval: 0.1
   projectileSpeed: 100
   projectileLifetime: 5
-  projectileColor: {r: 32, g: 24.362331, b: 0, a: 1}
+  effectiveRange: 500
+  projectileColor: {r: 0, g: 1.4152373, b: 31.999996, a: 1}
   shieldDamage: 10
   hullDamage: 10

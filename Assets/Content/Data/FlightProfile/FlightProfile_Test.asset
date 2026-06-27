@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5b0fabf706213a4c838ebb0c7629d49, type: 3}
   m_Name: FlightProfile_Test
   m_EditorClassIdentifier: Assembly-CSharp::ShipFlightProfile
-  maxSpeed: 20
-  acceleration: 15
-  turnRate: 3
-  driftDamping: 2
+  maxSpeed: 30
+  acceleration: 20
+  turnRate: 4
+  driftDamping: 0
   driftDampingFactor: 1
   bankAmount: 60
   bankSmooth: 3

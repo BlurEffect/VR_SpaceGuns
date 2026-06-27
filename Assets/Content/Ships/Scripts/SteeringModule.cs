@@ -208,8 +208,11 @@ public static class SteeringModule
         if (dot > 0.2f && distance > breakOffRange)
             return forward * maxSpeed; // fly through
 
-        // Break off: perpendicular to target vector, biased away
-        Vector3 perp = Vector3.Cross(toTarget.normalized, Vector3.up).normalized;
+        // Break off perpendicular to target vector, biased away.
+        // Use ship forward to pick the break side — ships arriving from different angles break off differently.
+        Vector3 breakRef = Mathf.Abs(Vector3.Dot(toTarget.normalized, forward)) < 0.95f
+            ? forward : Vector3.up;
+        Vector3 perp = Vector3.Cross(toTarget.normalized, breakRef).normalized;
         return (perp - toTarget.normalized * 0.5f).normalized * maxSpeed;
     }
 

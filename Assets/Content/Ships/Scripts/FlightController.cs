@@ -14,34 +14,64 @@ public class FlightController : MonoBehaviour
 
         steering.ComputeSteering(transform.forward, _velocity, flightProfile.maxSpeed);
 
-        RotateTowards(steering.desiredDirection);
-        ApplyBanking(steering.desiredDirection);
+        UpdateVelocity();
 
-        Vector3 desiredVelocity = steering.desiredDirection * steering.desiredSpeed;
-        _velocity = Vector3.MoveTowards(_velocity, desiredVelocity, flightProfile.acceleration * Time.deltaTime);
+        // Nose tracks the actual velocity direction — produces smooth arcs instead of the nose
+        // snapping to a new heading while the path slowly catches up.
+        Vector3 noseTarget = _velocity.sqrMagnitude > 0.01f
+            ? _velocity.normalized
+            : steering.desiredDirection;
 
-        ApplyDriftDamping();
+        RotateTowards(noseTarget);
+        ApplyBanking(noseTarget);
         Move();
     }
 
     private void RotateTowards(Vector3 targetDirection)
     {
-        // Blend between world up (keeps ship level) and transform.up (avoids gimbal lock near vertical).
         float verticalness = Mathf.Abs(Vector3.Dot(targetDirection, Vector3.up));
-        Vector3 upRef = Vector3.Lerp(Vector3.up, transform.up, verticalness);
+        // Near-vertical: blend toward Vector3.forward as the up-hint instead of transform.up.
+        // transform.up creates a self-referential feedback loop (the Slerp target depends on
+        // the Slerp result), causing oscillation when the ship rises or dives steeply.
+        Vector3 upRef = Vector3.Lerp(Vector3.up, Vector3.forward,
+                            Mathf.Clamp01((verticalness - 0.7f) / 0.3f));
         Quaternion targetRot = Quaternion.LookRotation(targetDirection, upRef);
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, Time.deltaTime * flightProfile.turnRate);
     }
 
     private void ApplyBanking(Vector3 targetDirection)
     {
+        // Suppress banking as the ship flies near-vertical. In that orientation InverseTransformDirection
+        // produces large local-X values that cause the banking Slerp to fight RotateTowards every frame.
+        float verticalness   = Mathf.Abs(Vector3.Dot(targetDirection, Vector3.up));
+        float bankSuppression = 1f - Mathf.Clamp01((verticalness - 0.6f) / 0.4f);
+
         float bankingAngle = Mathf.Clamp(-transform.InverseTransformDirection(targetDirection).x, -1f, 1f)
-                             * flightProfile.bankAmount;
+                             * flightProfile.bankAmount * bankSuppression;
         Quaternion bankRotation = Quaternion.Euler(0f, 0f, bankingAngle);
         transform.rotation = Quaternion.Slerp(
             transform.rotation,
             transform.rotation * bankRotation,
             Time.deltaTime * flightProfile.bankSmooth);
+    }
+
+    private void UpdateVelocity()
+    {
+        float   currentSpeed = _velocity.magnitude;
+        Vector3 currentDir   = currentSpeed > 0.001f ? _velocity / currentSpeed : transform.forward;
+
+        float newSpeed = Mathf.MoveTowards(currentSpeed, steering.desiredSpeed,
+                             flightProfile.acceleration * Time.deltaTime);
+
+        // Angular rate = a/v  (centripetal formula): fast ships arc wide, slow ships turn tighter.
+        float angularRate = currentSpeed > 0.1f
+            ? flightProfile.acceleration / currentSpeed
+            : flightProfile.acceleration;
+
+        Vector3 newDir = Vector3.RotateTowards(currentDir, steering.desiredDirection,
+                             angularRate * Time.deltaTime, 0f);
+
+        _velocity = newDir * newSpeed;
     }
 
     private void ApplyDriftDamping()

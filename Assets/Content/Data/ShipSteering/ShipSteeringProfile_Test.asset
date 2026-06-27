@@ -13,13 +13,15 @@ MonoBehaviour:
   m_Name: ShipSteeringProfile_Test
   m_EditorClassIdentifier: Assembly-CSharp::ShipSteeringProfile
   avoidDistance: 15
-  shipRadius: 0.5
+  shipRadius: 5.5
   obstacleMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 193
   separationDistance: 10
   maxSteeringAngle: 90
   wanderJitter: 0.5
   wanderRadius: 1.5
   wanderProjectDistance: 2
-  waypointReachRadius: 3
+  waypointReachRadius: 15
+  slowRadius: 30
+  arriveRadius: 5

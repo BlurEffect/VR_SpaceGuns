@@ -14,18 +14,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ShipSteeringProfile
   seekWeight: 0
   fleeWeight: 0
-  arriveWeight: 1
+  arriveWeight: 0
   wanderWeight: 0
-  avoidWeight: 0.8
+  avoidWeight: 0
   cohesionWeight: 0
   separationWeight: 0.4
   alignmentWeight: 0
   orbitWeight: 0
-  pursueWeight: 0.6
+  pursueWeight: 0
   evadeWeight: 0
   attackRunWeight: 1
   containmentWeight: 0.2
   formationWeight: 0
   patrolWeight: 0
-  attackRange: 20
-  breakOffRange: 5
+  attackRange: 100
+  breakOffRange: 50

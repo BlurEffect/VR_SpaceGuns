@@ -5,7 +5,7 @@ public class SteeringAgent : MonoBehaviour
 {
     [Header("Profiles")]
     public ShipSteeringProfile       steeringProfile;
-    public ShipSteeringBehaviorProfile behaviorProfile;
+    [HideInInspector] public ShipSteeringBehaviorProfile behaviorProfile;
 
     [Header("Seek / Flee Targets")]
     public Transform seekTarget;

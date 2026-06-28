@@ -40,16 +40,9 @@ public class Targeting : MonoBehaviour
 
     void Update()
     {
-        
-        
         if (!target) return;
-        
-        //TurretVFXManager.Instance.SpawnTracer(muzzleRight.position, target.position, projectileSpeed);
 
-        
-
-        // --- STEP 1: Predict target position if moving ---
-        Vector3 targetPos = target.position;
+        // --- STEP 1: Predict target position ---
         if (targetRigidbody)
         {
             Vector3 toTarget = target.position - rotatorX.position;
@@ -58,89 +51,50 @@ public class Targeting : MonoBehaviour
         }
         else
         {
-            predictedTargetPos = targetPos;
+            predictedTargetPos = target.position;
         }
 
+        // --- STEP 2: Yaw --- project onto parent’s local horizontal plane, not world XZ
         if (rotatorYMain != null)
         {
-            // --- STEP 2: Handle yaw (horizontal rotation) ---
-            Vector3 flatDir = predictedTargetPos - rotatorYMain.position;
-            flatDir.y = 0f; // keep only horizontal component
+            Vector3 parentUp = rotatorYMain.parent != null ? rotatorYMain.parent.up : Vector3.up;
+            Vector3 flatDir  = Vector3.ProjectOnPlane(predictedTargetPos - rotatorYMain.position, parentUp);
             if (flatDir.sqrMagnitude > 0.001f)
             {
-                Quaternion desiredYaw = Quaternion.LookRotation(flatDir, Vector3.up);
+                Quaternion desiredYaw = Quaternion.LookRotation(flatDir, parentUp);
                 rotatorYMain.rotation = Quaternion.RotateTowards(
                     rotatorYMain.rotation, desiredYaw, yawSpeed * Time.deltaTime);
             }
         }
 
-        /* Original pitch implementation with rotator directly aiming at target, however we need to pitch in a way so that the barrels align properly
-        // --- STEP 3: Handle pitch (vertical rotation) ---
-        // predictedTargetPos - a world-space direction from the pitch joint to the target.
-        //Since the rotatorX only rotates on its local X-axis, we need to know where the target is in that local coordinate frame:
-        // This says: “what is the direction to the target, relative to my parent’s orientation?”
-        Vector3 localTargetDir = rotatorX.parent.InverseTransformPoint(predictedTargetPos);
-       // We only care about pitching around X, so we look at the vertical vs forward components.
-        //    We can use Mathf.Atan2 to find the pitch angle:
-        //Atan2(y, z) gives you the vertical angle (up/down) between forward and the target direction.
-        //    Multiplying by Rad2Deg converts radians to degrees.
-      //  Mathf.Atan2(y, x) returns the angle (in radians) between the positive X-axis and the vector (x, y) on a 2D plane.
-        float targetPitch = -Mathf.Atan2(localTargetDir.y, localTargetDir.z) * Mathf.Rad2Deg;
-        targetPitch = Mathf.Clamp(targetPitch, minPitch, maxPitch);
-
-        Quaternion desiredPitch = Quaternion.Euler(targetPitch, 0f, 0f);
-        rotatorX.localRotation = Quaternion.RotateTowards(
-            rotatorX.localRotation, desiredPitch, pitchSpeed * Time.deltaTime);
-        */
-
+        // --- STEP 3: Pitch ---
         if (rotatorX != null)
         {
+            Vector3 midRef = rotatorX.position;
+            if (rotatorBarrelLeft != null && rotatorBarrelRight != null)
+                midRef = (rotatorBarrelLeft.position + rotatorBarrelRight.position) * 0.5f;
 
-            Vector3 barrelsMid = (rotatorBarrelLeft.position + rotatorBarrelRight.position) * 0.5f;
-            Vector3 toTarget2 = target.position - barrelsMid;
-            /*We can compute the pitch angle θ by looking at the direction from the barrel position to the target (like before),
-    then project that direction into the local space of the rotatorX, and extract the vertical angle.*/
-            Vector3 localDirPitch = rotatorX.parent.InverseTransformDirection(toTarget2);
-            float targetPitch = -Mathf.Atan2(localDirPitch.y, localDirPitch.z) * Mathf.Rad2Deg;
-            targetPitch = Mathf.Clamp(targetPitch, minPitch, maxPitch);
+            Vector3 localDirPitch = rotatorX.parent.InverseTransformDirection(predictedTargetPos - midRef);
+            float   targetPitch   = Mathf.Clamp(-Mathf.Atan2(localDirPitch.y, localDirPitch.z) * Mathf.Rad2Deg, minPitch, maxPitch);
 
-            Quaternion desiredPitch = Quaternion.Euler(targetPitch, 0f, 0f);
             rotatorX.localRotation = Quaternion.RotateTowards(
-                rotatorX.localRotation, desiredPitch, pitchSpeed * Time.deltaTime);
+                rotatorX.localRotation, Quaternion.Euler(targetPitch, 0f, 0f), pitchSpeed * Time.deltaTime);
         }
 
-        Vector3 dirLeft = target.position - rotatorBarrelLeft.position;
-        Vector3 dirRight = target.position - rotatorBarrelRight.position;
-        // Convert that direction into the local space of each barrel’s parent
-        Vector3 localDirLeft = rotatorBarrelLeft.parent.InverseTransformDirection(dirLeft);
-        Vector3 localDirRight = rotatorBarrelRight.parent.InverseTransformDirection(dirRight);
-        
-        float yawLeft = Mathf.Atan2(localDirLeft.x, localDirLeft.z) * Mathf.Rad2Deg;
-        float yawRight = Mathf.Atan2(localDirRight.x, localDirRight.z) * Mathf.Rad2Deg;
-        
-        yawLeft = Mathf.Clamp(yawLeft, minPitch, maxPitch);
-        yawRight = Mathf.Clamp(yawRight, minPitch, maxPitch);
-        
-        Quaternion desiredYawLeft = Quaternion.Euler(0f, yawLeft, 0f);
-        Quaternion desiredYawRight = Quaternion.Euler(0f, yawRight, 0f);
+        // --- STEP 4: Per-barrel yaw ---
+        if (rotatorBarrelLeft != null && rotatorBarrelRight != null)
+        {
+            Vector3 localDirLeft  = rotatorBarrelLeft.parent.InverseTransformDirection(predictedTargetPos - rotatorBarrelLeft.position);
+            Vector3 localDirRight = rotatorBarrelRight.parent.InverseTransformDirection(predictedTargetPos - rotatorBarrelRight.position);
 
-        rotatorBarrelLeft.localRotation = Quaternion.RotateTowards(
-            rotatorBarrelLeft.localRotation, desiredYawLeft, barrelYawSpeed * Time.deltaTime);
-        
-        rotatorBarrelRight.localRotation = Quaternion.RotateTowards(
-            rotatorBarrelRight.localRotation, desiredYawRight, barrelYawSpeed * Time.deltaTime);
-        
-        //rotatorBarrelLeft.localRotation = Quaternion.Euler(0f, yawLeft, 0f);
-        //rotatorBarrelRight.localRotation = Quaternion.Euler(0f, yawRight, 0f);
-        
-        
-        
-        
-        //rotatorBarrelRight.localRotation = Quaternion.RotateTowards(
-        //   rotatorBarrelRight.localRotation, Quaternion.Inverse(desiredBarrelYaw), yawSpeed * Time.deltaTime);
-        
-        //rotatorBarrelLeft.localRotation = Quaternion.Inverse(rotatorYMain.localRotation);
-        //rotatorBarrelRight.localRotation = rotatorYMain.localRotation;
+            float yawLeft  = Mathf.Clamp(Mathf.Atan2(localDirLeft.x,  localDirLeft.z)  * Mathf.Rad2Deg, minYaw, maxYaw);
+            float yawRight = Mathf.Clamp(Mathf.Atan2(localDirRight.x, localDirRight.z) * Mathf.Rad2Deg, minYaw, maxYaw);
+
+            rotatorBarrelLeft.localRotation  = Quaternion.RotateTowards(
+                rotatorBarrelLeft.localRotation,  Quaternion.Euler(0f, yawLeft,  0f), barrelYawSpeed * Time.deltaTime);
+            rotatorBarrelRight.localRotation = Quaternion.RotateTowards(
+                rotatorBarrelRight.localRotation, Quaternion.Euler(0f, yawRight, 0f), barrelYawSpeed * Time.deltaTime);
+        }
 
         // --- Aim & line-of-fire check ---
         if (muzzleLeft != null && muzzleRight != null)
@@ -149,10 +103,8 @@ public class Targeting : MonoBehaviour
             Vector3 muzzleForward = (muzzleLeft.forward  + muzzleRight.forward).normalized;
             Vector3 toTarget      = predictedTargetPos - muzzleMid;
 
-            IsAimed = Vector3.Angle(muzzleForward, toTarget.normalized) <= aimThresholdDegrees;
-
-            bool clearPath = !Physics.Raycast(muzzleMid, muzzleForward, toTarget.magnitude, lineOfFireBlockers);
-            ReadyToFire = IsAimed && clearPath;
+            IsAimed     = Vector3.Angle(muzzleForward, toTarget.normalized) <= aimThresholdDegrees;
+            ReadyToFire = IsAimed && !Physics.Raycast(muzzleMid, muzzleForward, toTarget.magnitude, lineOfFireBlockers);
         }
         else
         {

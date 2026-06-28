@@ -12,6 +12,10 @@ public class FlightController : MonoBehaviour
     {
         if (steering == null || flightProfile == null) return;
 
+        if (flightProfile == null)
+        {
+            int a = 2;
+        }
         steering.ComputeSteering(transform.forward, _velocity, flightProfile.maxSpeed);
 
         UpdateVelocity();

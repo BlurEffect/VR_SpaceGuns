@@ -5,6 +5,7 @@ using UnityEngine;
 public class ShipAI : MonoBehaviour
 {
     [Header("Profiles")]
+    public ShipClass shipClass = ShipClass.Fighter;
     public ShipSensorProfile sensorProfile;
     public ShipSteeringBehaviorProfile attackProfile;
     public ShipSteeringBehaviorProfile patrolProfile;
@@ -14,6 +15,7 @@ public class ShipAI : MonoBehaviour
 
     [Header("Scan")]
     [SerializeField] private float scanInterval = 0.5f;
+    [SerializeField] private bool selfScanForTargets = true;
 
     [Header("Primary Turrets")]
     [SerializeField] private TurretMount[] primaryMounts;
@@ -21,7 +23,8 @@ public class ShipAI : MonoBehaviour
     [Header("Point Defense")]
     [SerializeField] private TurretMount[] pointDefenseMounts;
 
-    public Transform AssignedTarget { get; private set; }
+    public Transform AssignedTarget  { get; private set; }
+    public Transform MovementTarget  { get; private set; }
     public SteeringAgent SteeringAgent => _steeringAgent;
 
     private SteeringAgent _steeringAgent;
@@ -40,7 +43,7 @@ public class ShipAI : MonoBehaviour
         {
             _scanTimer = 0f;
             ScanForEnemies();
-            if (AssignedTarget == null)
+            if (selfScanForTargets && AssignedTarget == null)
                 AssignedTarget = FindNearest();
         }
 
@@ -49,17 +52,10 @@ public class ShipAI : MonoBehaviour
         UpdatePointDefenseTurrets();
     }
 
-    // Called by FactionManager to override self-scan with a specific target.
-    public void AssignTarget(Transform t)
-    {
-        AssignedTarget = t;
-    }
-
-    // Returns the ship to autonomous self-scanning.
-    public void ClearTarget()
-    {
-        AssignedTarget = null;
-    }
+    public void AssignTarget(Transform t)        => AssignedTarget  = t;
+    public void ClearTarget()                    => AssignedTarget  = null;
+    public void AssignMovementTarget(Transform t) => MovementTarget = t;
+    public void ClearMovementTarget()             => MovementTarget = null;
 
     private void ScanForEnemies()
     {
@@ -84,20 +80,26 @@ public class ShipAI : MonoBehaviour
     {
         if (_steeringAgent == null) return;
 
-        if (AssignedTarget != null)
+        if (MovementTarget != null)
         {
-            _steeringAgent.seekTarget = AssignedTarget;
+            // Explicit movement order takes priority over combat and patrol.
+            // AssignedTarget still drives turrets independently.
+            _steeringAgent.seekTarget          = MovementTarget;
+            _steeringAgent.seekTargetRigidbody = null;
+            _steeringAgent.behaviorProfile     = AssignedTarget != null ? attackProfile : patrolProfile;
+        }
+        else if (AssignedTarget != null)
+        {
+            _steeringAgent.seekTarget          = AssignedTarget;
             _steeringAgent.seekTargetRigidbody = AssignedTarget.GetComponent<Rigidbody>();
-            if (attackProfile != null)
-                _steeringAgent.behaviorProfile = attackProfile;
+            _steeringAgent.behaviorProfile     = attackProfile;
         }
         else
         {
-            _steeringAgent.seekTarget = null;
+            _steeringAgent.seekTarget          = null;
             _steeringAgent.seekTargetRigidbody = null;
-            _steeringAgent.patrolWaypoints = patrolWaypoints;
-            if (patrolProfile != null)
-                _steeringAgent.behaviorProfile = patrolProfile;
+            _steeringAgent.patrolWaypoints     = patrolWaypoints;
+            _steeringAgent.behaviorProfile     = patrolProfile;
         }
     }
 

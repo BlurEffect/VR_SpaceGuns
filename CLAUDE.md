@@ -22,23 +22,29 @@ A VR showcase built for Meta Quest 3. The player rides a capital ship under atta
 
 Weighted steering behavior system — no Rigidbody physics, all custom.
 
+- **`ShipClass.cs`** — enum: `Fighter`, `CapitalShip`, `CapitalShipSubsystem`. Used by `ShipAI` and `FactionManager` to classify ships and match them to appropriate enemy targets.
 - **`SteeringModule.cs`** — static library of steering algorithms: Seek, Flee, Arrive, Wander, Orbit, Pursue, Evade, AvoidObstacles (5-ray SphereCast fan), Cohesion, Separation, Alignment, Containment, Formation, Patrol, AttackRun.
-- **`SteeringAgent.cs`** — MonoBehaviour that blends behaviors each frame. Reads physics params from `ShipSteeringProfile` and role weights/params from `ShipSteeringBehaviorProfile`. Holds per-engagement scene refs (targets, containment center, formation leader, patrol waypoints) and engagement-specific scalars (orbitRadius, containmentRadius). Outputs `desiredDirection` and `desiredSpeed`.
+- **`SteeringAgent.cs`** — MonoBehaviour that blends behaviors each frame. Reads physics params from `ShipSteeringProfile` and role weights/params from `ShipSteeringBehaviorProfile` (set at runtime by `ShipAI` — `[HideInInspector]` in Inspector). Holds per-engagement scene refs (targets, containment center, formation leader, patrol waypoints) and engagement-specific scalars (orbitRadius, containmentRadius). Outputs `desiredDirection` and `desiredSpeed`.
 - **`FlightController.cs`** — reads `SteeringAgent` output and `ShipFlightProfile`; handles rotation (Slerp with blended up-vector to avoid gimbal lock), banking roll, drift damping, and position update.
-- **`ShipAI.cs`** — per-ship tactical brain. Scans for enemies via `ShipSensorProfile`, assigns the nearest to its turrets (`Targeting[]`) and guns (`Shooting[]`), and swaps the `SteeringAgent`'s behavior profile between `attackProfile` and `patrolProfile`. Guns are enabled only when the target is within `GunProfile.effectiveRange`. `FactionManager` can override the self-scanned target via `AssignTarget()`.
-- **`FactionManager.cs`** — per-faction strategic coordinator. Holds a list of `ShipAI` ships and an enemy target list (populated by a scenario/GameManager). `DistributeTargets()` round-robins enemies across ships; `OrderAttack()` focuses all ships on one target; `OrderClearTargets()` releases assignments so ships resume self-scanning.
+- **`ShipAI.cs`** — per-ship tactical brain. Fields: `shipClass` (Fighter/CapitalShip), `selfScanForTargets` (false on capital ships to prevent chasing fighters autonomously). Three-tier steering priority in `UpdateSteering()`: `MovementTarget` (explicit fly-to) → `AssignedTarget` (combat, also drives turrets) → patrol waypoints. Turrets split into `TurretMount[] primaryMounts` (tracks `AssignedTarget`) and `TurretMount[] pointDefenseMounts` (autonomously tracks nearest scanned enemy per mount). Both use `ReadyToFire` gate before enabling `Shooting`. `FactionManager` drives targets via `AssignTarget()` / `AssignMovementTarget()`.
+- **`FactionManager.cs`** — per-faction strategic coordinator. Enemies registered as `EnemyEntry { Transform target, ShipClass shipClass }` via `RegisterEnemy(Transform, ShipClass)`. `DistributeTargets()` round-robins enemies to ships by matching `ShipClass`; fighters fall back to any enemy if no matching class found; capital ships get `ClearTarget()` if no match. `initialEnemies` list for scene testing without a GameManager — populated at `Start()` and `DistributeTargets()` fires automatically. Key methods: `OrderAttack()`, `OrderClearTargets()`, `OrderMoveTo(Transform)` (hull navigation, turrets unaffected), `OrderClearMovement()`.
 - **`ShipFlightProfile.cs`** — SO defining flight physics for a ship type: `maxSpeed`, `acceleration`, `turnRate`, `driftDamping`, `driftDampingFactor`, `bankAmount`, `bankSmooth`.
 - **`ShipSteeringProfile.cs`** — SO defining steering physics for a ship type: avoidance distances, obstacle mask, ship radius, separation distance, max steering angle, wander params, waypoint reach radius.
-- **`ShipSteeringBehaviorProfile.cs`** — SO defining an AI role: all behavior weights plus role-specific numeric params (`slowRadius`, `arriveRadius`, `attackRange`, `breakOffRange`). Swap this SO at runtime to change a ship's assignment.
+- **`ShipSteeringBehaviorProfile.cs`** — SO defining an AI role: all behavior weights plus role-specific numeric params (`slowRadius`, `arriveRadius`, `attackRange`, `breakOffRange`). Swapped at runtime by `ShipAI` between `attackProfile` and `patrolProfile`.
 - **`ShipSensorProfile.cs`** — SO defining sensor characteristics for a ship type: `detectionRange` (OverlapSphere radius) and `enemyMask` (LayerMask). Referenced by `ShipAI` for target scanning.
 
 **Four-SO rule**: `ShipFlightProfile`, `ShipSteeringProfile`, and `ShipSensorProfile` hold ship-type physical constants (what kind of ship this is). `ShipSteeringBehaviorProfile` holds tactical parameters that change with the ship's assignment. Scene references and per-engagement scalars stay on the MonoBehaviour.
 
+**Capital ship movement**: hull navigation (`MovementTarget` / patrol waypoints) is separate from combat targeting (`AssignedTarget`). The GameManager sets `OrderMoveTo(battlePosition)` for hull movement; `DistributeTargets()` assigns the enemy capital ship for turret engagement independently. Capital ships use Arrive behavior (slow `FlightProfile`: maxSpeed ~8, turnRate ~0.5) and hold position at their strategic location.
+
+**Prefab variants**: faction-specific differences (gun profiles with projectile color, layer masks) are baked into Blue/Red prefab variants rather than a runtime faction system. One neutral base prefab per ship type; Blue and Red variants override faction-specific fields.
+
 ### 2. Turrets & Firing (`Assets/Content/Guns/`)
 
-- **`Targeting.cs`** — dual-axis turret aiming. Yaw on `rotatorYMain`, pitch on `rotatorX`, per-barrel yaw on `rotatorBarrelLeft`/`rotatorBarrelRight`. Supports predictive aiming via target `Rigidbody.linearVelocity`.
+- **`Targeting.cs`** — dual-axis turret aiming. Yaw on `rotatorYMain` (projects onto parent's local up-plane via `Vector3.ProjectOnPlane` — correct for any ship orientation), pitch on `rotatorX`, optional per-barrel yaw on `rotatorBarrelLeft`/`rotatorBarrelRight` (null-safe). Supports predictive aiming via target `Rigidbody.linearVelocity`. Exposes `IsAimed` (angle between muzzle forward and predicted target within `aimThresholdDegrees`) and `ReadyToFire` (`IsAimed` + `lineOfFireBlockers` raycast clear). `ShipAI` gates `Shooting.enabled` on `ReadyToFire`.
 - **`Shooting.cs`** — Constant and Burst firing modes driven by a `GunProfile` SO. Spawns projectiles via `ProjectileManager`.
-- **`GunProfile.cs`** — SO (in `ScriptableObjects/` subfolder) replacing the old inline `FiringPattern` struct. Fields: `FiringMode`, cooldown/burst params, `projectileSpeed`, `projectileLifetime`, `effectiveRange`, `projectileColor`, `shieldDamage`, `hullDamage`. Also defines the `FiringMode` enum.
+- **`GunProfile.cs`** — SO (in `ScriptableObjects/` subfolder). Fields: `FiringMode`, cooldown/burst params, `projectileSpeed`, `projectileLifetime`, `effectiveRange`, `projectileColor`, `shieldDamage`, `hullDamage`. Also defines the `FiringMode` enum.
+- **`TurretMount`** — serializable struct pairing `Targeting` and `Shooting` explicitly, used for both `primaryMounts` and `pointDefenseMounts` on `ShipAI`. Eliminates fragile index-pairing between separate arrays.
 
 ### 3. Projectile & VFX Pipeline (`Assets/Content/Guns/`)
 
@@ -64,6 +70,10 @@ High-performance, no-Rigidbody design:
 - **Friendly fire** is allowed — no faction/IFF check in `ProjectileManager`.
 - **ScriptableObjects for everything** — ship flight, steering physics, sensor config, behavior profiles, gun configs, and health profiles are all SOs for easy per-prefab tuning without code changes. Ship-type constants live in `ShipFlightProfile`/`ShipSteeringProfile`/`ShipSensorProfile`; role/mission tactics live in `ShipSteeringBehaviorProfile`; engagement-specific scene refs stay on the MonoBehaviour.
 - **No Rigidbody physics** on ships or projectiles — all movement is custom, raycast-based collision.
+- **Capital ships do not self-scan** (`selfScanForTargets = false`) — hull movement and turret targets are always assigned externally by `FactionManager` / `GameManager`. Without this flag, capital ships would auto-acquire and chase the nearest enemy (a fighter), causing unwanted hull rotation.
+- **Class-based target distribution** — `FactionManager.DistributeTargets()` matches ships to enemies by `ShipClass`. Fighters fall back to any enemy if no matching class available. Capital ships receive `ClearTarget()` if no matching enemy exists, keeping them in patrol/hold position.
+- **Movement vs combat targeting are separate** — `MovementTarget` drives hull navigation (arrive at battle position); `AssignedTarget` drives turret engagement. The GameManager sets both independently.
+- **Faction prefab variants over a runtime faction system** — gun profile colors and layer masks are set in Blue/Red prefab variants. Avoided a `FactionData` + `FactionMember` system as the complexity outweighs the benefit for a 2-faction showcase.
 
 ---
 
@@ -72,9 +82,7 @@ High-performance, no-Rigidbody design:
 - VR player turret control (Meta Quest 3 controller input → turret transforms)
 - Scenario / game state logic (wave management, reinforcement trigger) — `FactionManager` API is in place, needs a `GameManager` to drive it
 - Ship destruction (visual + removal on `OnDestroyed`)
-- Enemy capital ship with its own turrets and health
-- AI behavior profile SO assets for the different roles (attack fighter, patrol, evade) — infrastructure is in place, just need Unity asset instances
-- `ShipSensorProfile` and `ShipAI` wired up on prefabs in the scene
+- Enemy capital ship prefab wired up in the scene with turrets, health, ShipAI, and FactionManager
 - Shield/hull HUD indicators
 
 ---
@@ -83,6 +91,7 @@ High-performance, no-Rigidbody design:
 
 | Purpose | Path |
 |---------|------|
+| Ship class enum | `Assets/Content/Ships/Scripts/ShipClass.cs` |
 | Steering behaviors | `Assets/Content/Ships/Scripts/SteeringModule.cs` |
 | Steering agent (AI blend) | `Assets/Content/Ships/Scripts/SteeringAgent.cs` |
 | Ship movement | `Assets/Content/Ships/Scripts/FlightController.cs` |

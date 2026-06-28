@@ -125,7 +125,7 @@ GameObject:
   - component: {fileID: -5328865772739810116}
   - component: {fileID: 4769457962594535506}
   m_Layer: 0
-  m_Name: Cruiser
+  m_Name: Cruiser_Red
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -168,11 +168,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef04dd89cecd14449062749115551bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShipAI
+  shipClass: 1
   sensorProfile: {fileID: 0}
   attackProfile: {fileID: 11400000, guid: 5d057cd48f9d3e14bb8d16fbd698404d, type: 2}
   patrolProfile: {fileID: 11400000, guid: 3645da1b86f9bf849b6156356618cd54, type: 2}
   patrolWaypoints: []
   scanInterval: 0.5
+  selfScanForTargets: 0
   primaryMounts: []
   pointDefenseMounts: []
 --- !u!114 &6429129647895387507

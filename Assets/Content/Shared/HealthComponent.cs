@@ -16,8 +16,9 @@ public class HealthComponent : MonoBehaviour, IDamageable
 
     public float CurrentShields => _currentShields;
     public float CurrentHull => _currentHull;
-    public float MaxShields => profile != null ? profile.maxShields : 0f;
-    public float MaxHull   => profile != null ? profile.maxHull   : 0f;
+    public float MaxShields  => profile != null ? profile.maxShields : 0f;
+    public float MaxHull     => profile != null ? profile.maxHull   : 0f;
+    public float HullPercent => MaxHull > 0f ? _currentHull / MaxHull : 0f;
 
     void Awake()
     {

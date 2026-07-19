@@ -8,7 +8,7 @@ public class Shooting : MonoBehaviour
     [SerializeField] private Transform muzzleLeft;
     [SerializeField] private Transform muzzleRight;
 
-    private float _cooldownTimer;
+    private float _cooldownTimer = float.MaxValue;
     private float _burstTimer;
     private int _burstCount;
 

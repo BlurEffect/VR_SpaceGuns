@@ -57,8 +57,16 @@ High-performance, no-Rigidbody design:
 ### 4. Health & Shields (`Assets/Content/Shared/`, `Assets/Content/Ships/ScriptableObjects/`)
 
 - **`IDamageable.cs`** — interface: `TakeDamage(float shieldDamage, float hullDamage)`.
-- **`HealthComponent.cs`** — implements `IDamageable`. Shields absorb `shieldDamage` first; `hullDamage` only applies once shields are at 0. Shield recharge: delayed by `shieldRechargeDelay` seconds after last hit, then regenerates at `shieldRechargeRate` per second. `OnShieldsDown` and `OnDestroyed` UnityEvents for hooking destruction logic.
+- **`HealthComponent.cs`** — implements `IDamageable`. Shields absorb `shieldDamage` first; `hullDamage` only applies once shields are at 0. Shield recharge: delayed by `shieldRechargeDelay` seconds after last hit, then regenerates at `shieldRechargeRate` per second. `OnShieldsDown` and `OnDestroyed` UnityEvents for hooking destruction logic. `HullPercent` property (0–1) used by `GameManager` health watchdog.
 - **`HealthProfile.cs`** — SO with `maxHull`, `maxShields`, `shieldRechargeDelay`, `shieldRechargeRate`.
+
+### 5. Scenario Orchestration (`Assets/Content/Scenario/`)
+
+- **`GameManager.cs`** — singleton MonoBehaviour driving the full showcase via a coroutine-based state machine. States: `Menu → Patrol → SensorContact → EnemyWarpIn → Battle → Reinforcements → Victory`. Spawns enemy cruiser, fighters, and drones at `EnemyWarpIn`; calls `FactionManager.RegisterShip/RegisterEnemy/DistributeTargets` to wire AI; runs a `RespawnLoop` coroutine during `Battle` to top up Red fighter/drone counts; triggers `Reinforcements` either on `battleDuration` timer or when player capital ship `HullPercent` drops below `healthTriggerThreshold`; transitions to `Victory` when the enemy capital ship `OnDestroyed` fires. Radio chatter is `AudioSource` + `AudioClip` fields played at each narrative beat. All timing and force counts are Inspector-tweakable. Statistics (enemies destroyed, elapsed time) logged to console in `VictoryState` — proper UI is future work.
+
+**Drone distinction**: drones use `ShipClass.Fighter` — no separate class. Visual and flight-model difference only (separate prefab, different `ShipFlightProfile`). Keeps `DistributeTargets()` logic unchanged.
+
+**Scene wiring required**: empty GameObjects for battle positions and spawn roots; `menuCamera` / `gameCamera` toggled by `GameManager.SetCamera()`; `playerCapitalShip` and `playerCapitalShipHealth` wired to the Blue cruiser.
 
 ---
 
@@ -80,10 +88,12 @@ High-performance, no-Rigidbody design:
 ## What's Not Yet Built
 
 - VR player turret control (Meta Quest 3 controller input → turret transforms)
-- Scenario / game state logic (wave management, reinforcement trigger) — `FactionManager` API is in place, needs a `GameManager` to drive it
 - Ship destruction (visual + removal on `OnDestroyed`)
 - Enemy capital ship prefab wired up in the scene with turrets, health, ShipAI, and FactionManager
+- Drone prefab (placeholder model + fast/swarmy `ShipFlightProfile`)
+- Scene wiring for `GameManager` (battle position transforms, spawn roots, prefab/audio refs)
 - Shield/hull HUD indicators
+- Victory screen / statistics UI (currently console-log stub)
 
 ---
 
@@ -109,3 +119,4 @@ High-performance, no-Rigidbody design:
 | Damage interface | `Assets/Content/Shared/IDamageable.cs` |
 | Health/shield logic | `Assets/Content/Shared/HealthComponent.cs` |
 | Health config SO | `Assets/Content/Ships/ScriptableObjects/HealthProfile.cs` |
+| Scenario state machine | `Assets/Content/Scenario/GameManager.cs` |

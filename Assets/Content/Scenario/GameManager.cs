@@ -34,15 +34,24 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject prefabReinforcementFighter;
 
     [Header("Cameras")]
-    [SerializeField] private GameObject menuCamera;
-    [SerializeField] private GameObject gameCamera;
+    [SerializeField] private MenuManager menuManager;
+    [SerializeField] private GameObject  gameCamera;
 
     [Header("Radio Chatter")]
+    [SerializeField] private UIManager   uiManager;
     [SerializeField] private AudioSource radioSource;
     [SerializeField] private AudioClip   chatterSensorContact;
     [SerializeField] private AudioClip   chatterEnemyDetected;
     [SerializeField] private AudioClip   chatterReinforcements;
     [SerializeField] private AudioClip   chatterReinforcementsArrived;
+    [SerializeField] private string      messageSensorContact         = "Unidentified contact on sensors.";
+    [SerializeField] private string      messageEnemyDetected         = "Enemy capital ship confirmed. All hands to battle stations.";
+    [SerializeField] private string      messageReinforcements        = "Requesting immediate reinforcements.";
+    [SerializeField] private string      messageReinforcementsArrived = "Reinforcements inbound. Hold the line.";
+
+    [System.Serializable]
+    struct ContactEntry { public RadioSender sender; public RadioContact contact; }
+    [SerializeField] private ContactEntry[] radioContacts;
 
     [Header("Timing (seconds)")]
     [SerializeField] private float patrolDuration        = 30f;
@@ -123,7 +132,20 @@ public class GameManager : MonoBehaviour
     IEnumerator MenuState()
     {
         SetCamera(menuActive: true);
-        yield return new WaitUntil(() => Input.anyKeyDown);
+        bool ready = false;
+        void OnReady() => ready = true;
+        if (menuManager != null)
+        {
+            menuManager.OnStartRequested += OnReady;
+            menuManager.Activate();
+            yield return new WaitUntil(() => ready);
+            menuManager.OnStartRequested -= OnReady;
+            menuManager.Deactivate();
+        }
+        else
+        {
+            yield return new WaitUntil(() => Input.anyKeyDown);
+        }
         TransitionTo(GameState.Patrol);
     }
 
@@ -136,7 +158,7 @@ public class GameManager : MonoBehaviour
 
     IEnumerator SensorContactState()
     {
-        PlayChatter(chatterSensorContact);
+        PlayChatter(RadioSender.BridgeOfficer, chatterSensorContact, messageSensorContact);
         yield return new WaitForSeconds(sensorContactDuration);
         TransitionTo(GameState.EnemyWarpIn);
     }
@@ -180,11 +202,11 @@ public class GameManager : MonoBehaviour
         factionRed.DistributeTargets();
         factionBlue.DistributeTargets();
 
-        PlayChatter(chatterEnemyDetected);
+        PlayChatter(RadioSender.BridgeOfficer, chatterEnemyDetected, messageEnemyDetected);
         float chatterDelay = chatterEnemyDetected != null ? chatterEnemyDetected.length + 1f : 3f;
         yield return new WaitForSeconds(chatterDelay);
 
-        PlayChatter(chatterReinforcements);
+        PlayChatter(RadioSender.WingCommander, chatterReinforcements, messageReinforcements);
 
         _battleStartTime = Time.time;
         TransitionTo(GameState.Battle);
@@ -228,7 +250,7 @@ public class GameManager : MonoBehaviour
         factionBlue.DistributeTargets();
         factionRed.DistributeTargets();
 
-        PlayChatter(chatterReinforcementsArrived);
+        PlayChatter(RadioSender.ReinforcementLeader, chatterReinforcementsArrived, messageReinforcementsArrived);
 
         yield return new WaitUntil(() => _enemyCruiserDestroyed);
         TransitionTo(GameState.Victory);
@@ -328,18 +350,28 @@ public class GameManager : MonoBehaviour
             factionBlue.UnregisterEnemy(_enemyCapitalShip.transform);
     }
 
-    void PlayChatter(AudioClip clip)
+    void PlayChatter(RadioSender sender, AudioClip clip, string message)
     {
-        if (radioSource == null || clip == null) return;
-        radioSource.Stop();
-        radioSource.clip = clip;
-        radioSource.Play();
+        if (radioSource != null && clip != null)
+        {
+            radioSource.Stop();
+            radioSource.clip = clip;
+            radioSource.Play();
+        }
+        uiManager?.DisplayRadioMessage(GetContact(sender), message,
+                                       clip != null ? clip.length : 3f);
+    }
+
+    RadioContact GetContact(RadioSender sender)
+    {
+        foreach (var e in radioContacts)
+            if (e.sender == sender) return e.contact;
+        return null;
     }
 
     void SetCamera(bool menuActive)
     {
-        if (menuCamera != null) menuCamera.SetActive(menuActive);
-        if (gameCamera  != null) gameCamera.SetActive(!menuActive);
+        if (gameCamera != null) gameCamera.SetActive(!menuActive);
     }
 
     static void CleanDeadEntries(List<ShipAI> list)

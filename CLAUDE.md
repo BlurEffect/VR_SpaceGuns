@@ -62,11 +62,17 @@ High-performance, no-Rigidbody design:
 
 ### 5. Scenario Orchestration (`Assets/Content/Scenario/`)
 
-- **`GameManager.cs`** — singleton MonoBehaviour driving the full showcase via a coroutine-based state machine. States: `Menu → Patrol → SensorContact → EnemyWarpIn → Battle → Reinforcements → Victory`. Spawns enemy cruiser, fighters, and drones at `EnemyWarpIn`; calls `FactionManager.RegisterShip/RegisterEnemy/DistributeTargets` to wire AI; runs a `RespawnLoop` coroutine during `Battle` to top up Red fighter/drone counts; triggers `Reinforcements` either on `battleDuration` timer or when player capital ship `HullPercent` drops below `healthTriggerThreshold`; transitions to `Victory` when the enemy capital ship `OnDestroyed` fires. Radio chatter is `AudioSource` + `AudioClip` fields played at each narrative beat. All timing and force counts are Inspector-tweakable. Statistics (enemies destroyed, elapsed time) logged to console in `VictoryState` — proper UI is future work.
+- **`GameManager.cs`** — singleton MonoBehaviour driving the full showcase via a coroutine-based state machine. States: `Menu → Patrol → SensorContact → EnemyWarpIn → Battle → Reinforcements → Victory`. Spawns enemy cruiser, fighters, and drones at `EnemyWarpIn`; calls `FactionManager.RegisterShip/RegisterEnemy/DistributeTargets` to wire AI; runs a `RespawnLoop` coroutine during `Battle` to top up Red fighter/drone counts; triggers `Reinforcements` either on `battleDuration` timer or when player capital ship `HullPercent` drops below `healthTriggerThreshold`; transitions to `Victory` when the enemy capital ship `OnDestroyed` fires. `PlayChatter(RadioSender, AudioClip, string)` drives both audio and `UIManager` at each narrative beat. All timing and force counts are Inspector-tweakable. Statistics (enemies destroyed, elapsed time) logged to console in `VictoryState` — proper UI is future work.
+- **`MenuManager.cs`** — active during the `Menu` state. Cycles through a `CinemachineCamera[]` array on a fixed interval. Subscribes to `InputSystem.onAnyButtonPress` as an `IDisposable` (fire-once pattern). Exposes `Activate()` / `Deactivate()` called by GameManager; fires `OnStartRequested` event to trigger the `Patrol` transition.
+- **`RadioContact.cs`** — SO (`Assets/Content/Scenario/`) holding `contactName` (string) and `portrait` (Sprite) for a radio sender. Also defines the `RadioSender` enum (`BridgeOfficer`, `WingCommander`, `ReinforcementLeader`). GameManager holds a `ContactEntry[]` array (enum → SO) and looks up the right contact at each chatter beat.
 
 **Drone distinction**: drones use `ShipClass.Fighter` — no separate class. Visual and flight-model difference only (separate prefab, different `ShipFlightProfile`). Keeps `DistributeTargets()` logic unchanged.
 
-**Scene wiring required**: empty GameObjects for battle positions and spawn roots; `menuCamera` / `gameCamera` toggled by `GameManager.SetCamera()`; `playerCapitalShip` and `playerCapitalShipHealth` wired to the Blue cruiser.
+**Scene wiring required**: empty GameObjects for battle positions and spawn roots; `MenuManager` + `gameCamera` wired on GameManager (`MenuManager` handles camera cycling during menu, `gameCamera` is enabled for gameplay); `playerCapitalShip` and `playerCapitalShipHealth` wired to the Blue cruiser.
+
+### 6. UI (`Assets/Content/UI/`)
+
+- **`UIManager.cs`** — displays radio message callouts. `DisplayRadioMessage(RadioContact, string, float)` sets the contact portrait and name then shows the message text; auto-clears after the given duration (matched to audio clip length by `GameManager`). A string-only overload is kept for fallback callers. Wired to GameManager via Inspector.
 
 ---
 
@@ -87,11 +93,11 @@ High-performance, no-Rigidbody design:
 
 ## What's Not Yet Built
 
-- VR player turret control (Meta Quest 3 controller input → turret transforms)
+- VR player turret control (Meta Quest 3 controller input → turret transforms) — `PlayerTurretController.cs` exists but XR integration (cursor lock, locomotion-provider disable) is deferred
 - Ship destruction (visual + removal on `OnDestroyed`)
 - Enemy capital ship prefab wired up in the scene with turrets, health, ShipAI, and FactionManager
 - Drone prefab (placeholder model + fast/swarmy `ShipFlightProfile`)
-- Scene wiring for `GameManager` (battle position transforms, spawn roots, prefab/audio refs)
+- Scene wiring for `GameManager` (battle position transforms, spawn roots, prefab/audio refs, RadioContact assets)
 - Shield/hull HUD indicators
 - Victory screen / statistics UI (currently console-log stub)
 
@@ -120,3 +126,6 @@ High-performance, no-Rigidbody design:
 | Health/shield logic | `Assets/Content/Shared/HealthComponent.cs` |
 | Health config SO | `Assets/Content/Ships/ScriptableObjects/HealthProfile.cs` |
 | Scenario state machine | `Assets/Content/Scenario/GameManager.cs` |
+| Menu camera cycling + input | `Assets/Content/Scenario/MenuManager.cs` |
+| Radio contact SO + sender enum | `Assets/Content/Scenario/RadioContact.cs` |
+| Radio message UI | `Assets/Content/UI/UIManager.cs` |

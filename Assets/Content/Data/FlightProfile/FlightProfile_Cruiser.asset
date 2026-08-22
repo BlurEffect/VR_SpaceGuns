@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5b0fabf706213a4c838ebb0c7629d49, type: 3}
   m_Name: FlightProfile_Cruiser
   m_EditorClassIdentifier: Assembly-CSharp::ShipFlightProfile
-  maxSpeed: 8
-  acceleration: 2
-  turnRate: 0.5
+  maxSpeed: 20
+  acceleration: 20
+  turnRate: 0.05
   driftDamping: 0
   driftDampingFactor: 1
   bankAmount: 0

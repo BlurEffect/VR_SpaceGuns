@@ -8,6 +8,7 @@ using UnityEngine.InputSystem.Utilities;
 public class MenuManager : MonoBehaviour
 {
     [SerializeField] private CinemachineCamera[] menuCameras;
+    [SerializeField] private GameObject  menuCameraAddons;
     [SerializeField] private float cameraSwitchInterval = 5f;
 
     public event Action OnStartRequested;
@@ -20,6 +21,7 @@ public class MenuManager : MonoBehaviour
     {
         _currentIndex = 0;
         SetActiveCamera(0);
+        menuCameraAddons.SetActive(true);
         _cycleRoutine   = StartCoroutine(CycleRoutine());
         _buttonListener = InputSystem.onAnyButtonPress.Call(HandleAnyButton);
     }
@@ -31,6 +33,8 @@ public class MenuManager : MonoBehaviour
         _buttonListener = null;
         foreach (var cam in menuCameras)
             if (cam != null) cam.gameObject.SetActive(false);
+        
+        menuCameraAddons.SetActive(false);
     }
 
     private IEnumerator CycleRoutine()

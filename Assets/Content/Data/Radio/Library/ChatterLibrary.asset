@@ -1,0 +1,77 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2818058f248ee9f46a214557f0c6052b, type: 3}
+  m_Name: ChatterLibrary
+  m_EditorClassIdentifier: Assembly-CSharp::ChatterLibrary
+  entries:
+  - key: 0
+    contact: {fileID: 11400000, guid: 890ab86fbdfff7046be77d6819a78440, type: 2}
+    message: Captain, long range scanners are picking up a single craft in hyperdrive,
+      set for interception course.
+    clip: {fileID: 0}
+  - key: 0
+    contact: {fileID: 11400000, guid: 6e3bc509f56b41a42ba90333dfd832d8, type: 2}
+    message: What are we dealing with Leutnant?
+    clip: {fileID: 0}
+  - key: 0
+    contact: {fileID: 11400000, guid: 890ab86fbdfff7046be77d6819a78440, type: 2}
+    message: Transponder is off, hyperdrive signature scrambled, and approaching
+      fast...
+    clip: {fileID: 0}
+  - key: 0
+    contact: {fileID: 11400000, guid: 6e3bc509f56b41a42ba90333dfd832d8, type: 2}
+    message: I've heard enough. Mr. Ferrier, battle stations, shields to full capacity!
+      Let's not get caught on the wrong foot here.
+    clip: {fileID: 0}
+  - key: 0
+    contact: {fileID: 11400000, guid: adaaaec2cd94dad4e91311ca0354173b, type: 2}
+    message: Aye, Captain!
+    clip: {fileID: 0}
+  - key: 0
+    contact: {fileID: 11400000, guid: adaaaec2cd94dad4e91311ca0354173b, type: 2}
+    message: 'You heard the captain: all stations prepare for combat!'
+    clip: {fileID: 0}
+  - key: 0
+    contact: {fileID: 11400000, guid: adaaaec2cd94dad4e91311ca0354173b, type: 2}
+    message: Shields are up, captain! All turrets manned, drone batteries armed,
+      cannons charging, air wing will be ready for deployment in 30 seconds.
+    clip: {fileID: 0}
+  - key: 0
+    contact: {fileID: 11400000, guid: 6e3bc509f56b41a42ba90333dfd832d8, type: 2}
+    message: Good, Mr. Turner, what's the estimate?
+    clip: {fileID: 0}
+  - key: 0
+    contact: {fileID: 11400000, guid: 890ab86fbdfff7046be77d6819a78440, type: 2}
+    message: Contact in approximately 8 seconds, Captain! On our backboard!
+    clip: {fileID: 0}
+  - key: 0
+    contact: {fileID: 11400000, guid: 890ab86fbdfff7046be77d6819a78440, type: 2}
+    message: All gunners, keep an eye on our backboard, contact imminent!
+    clip: {fileID: 0}
+  - key: 0
+    contact: {fileID: 11400000, guid: 890ab86fbdfff7046be77d6819a78440, type: 2}
+    message: In 2...1...
+    clip: {fileID: 0}
+  - key: 1
+    contact: {fileID: 11400000, guid: 890ab86fbdfff7046be77d6819a78440, type: 2}
+    message: It's a Cydonian Destroyer!
+    clip: {fileID: 0}
+  - key: 2
+    contact: {fileID: 11400000, guid: 6e3bc509f56b41a42ba90333dfd832d8, type: 2}
+    message: This is Captain Miller of the SF Mercury! We're under attack of a Cydonian
+      Destroyer! Requesting assistance by any Terran ships within range!
+    clip: {fileID: 0}
+  - key: 3
+    contact: {fileID: 11400000, guid: c4ae96bda3e78b044b0fc7295c04549b, type: 2}
+    message: Captain Miller, this is Corporal Lancer of Space Police. Jumping in
+      on your starboard, watch your fire!
+    clip: {fileID: 0}

@@ -36,22 +36,12 @@ public class GameManager : MonoBehaviour
     [Header("Cameras")]
     [SerializeField] private MenuManager menuManager;
     [SerializeField] private GameObject  gameCamera;
+    [SerializeField] private GameObject  gameCameraAddons;
 
     [Header("Radio Chatter")]
-    [SerializeField] private UIManager   uiManager;
-    [SerializeField] private AudioSource radioSource;
-    [SerializeField] private AudioClip   chatterSensorContact;
-    [SerializeField] private AudioClip   chatterEnemyDetected;
-    [SerializeField] private AudioClip   chatterReinforcements;
-    [SerializeField] private AudioClip   chatterReinforcementsArrived;
-    [SerializeField] private string      messageSensorContact         = "Unidentified contact on sensors.";
-    [SerializeField] private string      messageEnemyDetected         = "Enemy capital ship confirmed. All hands to battle stations.";
-    [SerializeField] private string      messageReinforcements        = "Requesting immediate reinforcements.";
-    [SerializeField] private string      messageReinforcementsArrived = "Reinforcements inbound. Hold the line.";
-
-    [System.Serializable]
-    struct ContactEntry { public RadioSender sender; public RadioContact contact; }
-    [SerializeField] private ContactEntry[] radioContacts;
+    [SerializeField] private UIManager      uiManager;
+    [SerializeField] private AudioSource    radioSource;
+    [SerializeField] private ChatterLibrary chatterLibrary;
 
     [Header("Timing (seconds)")]
     [SerializeField] private float patrolDuration        = 30f;
@@ -105,6 +95,7 @@ public class GameManager : MonoBehaviour
 
     void TransitionTo(GameState next)
     {
+        Debug.Log($"[GameManager] State transition: {_state} -> {next}");
         if (_stateRoutine != null) StopCoroutine(_stateRoutine);
         _state = next;
         _stateRoutine = StartCoroutine(RunState(next));
@@ -158,7 +149,7 @@ public class GameManager : MonoBehaviour
 
     IEnumerator SensorContactState()
     {
-        PlayChatter(RadioSender.BridgeOfficer, chatterSensorContact, messageSensorContact);
+        PlayChatter(ChatterKey.SensorContact);
         yield return new WaitForSeconds(sensorContactDuration);
         TransitionTo(GameState.EnemyWarpIn);
     }
@@ -202,11 +193,17 @@ public class GameManager : MonoBehaviour
         factionRed.DistributeTargets();
         factionBlue.DistributeTargets();
 
-        PlayChatter(RadioSender.BridgeOfficer, chatterEnemyDetected, messageEnemyDetected);
-        float chatterDelay = chatterEnemyDetected != null ? chatterEnemyDetected.length + 1f : 3f;
-        yield return new WaitForSeconds(chatterDelay);
+        float enemyDetectedLength = 3f;
+        if (chatterLibrary != null &&
+            chatterLibrary.TryGet(ChatterKey.EnemyDetected, out var detected) &&
+            detected.clip != null)
+        {
+            enemyDetectedLength = detected.clip.length + 1f;
+        }
+        PlayChatter(ChatterKey.EnemyDetected);
+        yield return new WaitForSeconds(enemyDetectedLength);
 
-        PlayChatter(RadioSender.WingCommander, chatterReinforcements, messageReinforcements);
+        PlayChatter(ChatterKey.ReinforcementsRequested);
 
         _battleStartTime = Time.time;
         TransitionTo(GameState.Battle);
@@ -223,6 +220,7 @@ public class GameManager : MonoBehaviour
         StopCoroutine(respawn);
         StopCoroutine(watchdog);
 
+        Debug.Log("[GameManager] Reinforcements triggered by battle duration timer.");
         TransitionTo(GameState.Reinforcements);
     }
 
@@ -250,7 +248,7 @@ public class GameManager : MonoBehaviour
         factionBlue.DistributeTargets();
         factionRed.DistributeTargets();
 
-        PlayChatter(RadioSender.ReinforcementLeader, chatterReinforcementsArrived, messageReinforcementsArrived);
+        PlayChatter(ChatterKey.ReinforcementsArrived);
 
         yield return new WaitUntil(() => _enemyCruiserDestroyed);
         TransitionTo(GameState.Victory);
@@ -299,6 +297,7 @@ public class GameManager : MonoBehaviour
                 !_reinforcementsTriggered)
             {
                 _reinforcementsTriggered = true;
+                Debug.Log($"[GameManager] Reinforcements triggered early by hull health watchdog (HullPercent={playerCapitalShipHealth.HullPercent:F2} <= {healthTriggerThreshold:F2}).");
                 // Cancel BattleState's WaitForSeconds by transitioning immediately
                 TransitionTo(GameState.Reinforcements);
                 yield break;
@@ -350,28 +349,27 @@ public class GameManager : MonoBehaviour
             factionBlue.UnregisterEnemy(_enemyCapitalShip.transform);
     }
 
-    void PlayChatter(RadioSender sender, AudioClip clip, string message)
+    void PlayChatter(ChatterKey key)
     {
-        if (radioSource != null && clip != null)
+        if (chatterLibrary == null || !chatterLibrary.TryGet(key, out var entry)) return;
+
+        if (radioSource != null && entry.clip != null)
         {
             radioSource.Stop();
-            radioSource.clip = clip;
+            radioSource.clip = entry.clip;
             radioSource.Play();
         }
-        uiManager?.DisplayRadioMessage(GetContact(sender), message,
-                                       clip != null ? clip.length : 3f);
-    }
-
-    RadioContact GetContact(RadioSender sender)
-    {
-        foreach (var e in radioContacts)
-            if (e.sender == sender) return e.contact;
-        return null;
+        uiManager?.DisplayRadioMessage(entry.contact, entry.message,
+                                       entry.clip != null ? entry.clip.length : 3f);
     }
 
     void SetCamera(bool menuActive)
     {
-        if (gameCamera != null) gameCamera.SetActive(!menuActive);
+        if (gameCamera != null)
+        {
+            gameCamera.SetActive(!menuActive);
+            gameCameraAddons.SetActive(!menuActive);
+        }
     }
 
     static void CleanDeadEntries(List<ShipAI> list)

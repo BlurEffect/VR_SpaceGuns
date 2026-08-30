@@ -9,6 +9,7 @@ public class ShipAI : MonoBehaviour
     public ShipSensorProfile sensorProfile;
     public ShipSteeringBehaviorProfile attackProfile;
     public ShipSteeringBehaviorProfile patrolProfile;
+    public ShipSteeringBehaviorProfile moveProfile;
 
     [Header("Patrol")]
     [SerializeField] private Transform[] patrolWaypoints;
@@ -86,7 +87,9 @@ public class ShipAI : MonoBehaviour
             // AssignedTarget still drives turrets independently.
             _steeringAgent.seekTarget          = MovementTarget;
             _steeringAgent.seekTargetRigidbody = null;
-            _steeringAgent.behaviorProfile     = AssignedTarget != null ? attackProfile : patrolProfile;
+            _steeringAgent.behaviorProfile     = moveProfile != null
+                ? moveProfile
+                : (AssignedTarget != null ? attackProfile : patrolProfile);
         }
         else if (AssignedTarget != null)
         {

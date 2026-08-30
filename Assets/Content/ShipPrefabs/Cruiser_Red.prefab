@@ -172,6 +172,7 @@ MonoBehaviour:
   sensorProfile: {fileID: 0}
   attackProfile: {fileID: 11400000, guid: 5d057cd48f9d3e14bb8d16fbd698404d, type: 2}
   patrolProfile: {fileID: 11400000, guid: 3645da1b86f9bf849b6156356618cd54, type: 2}
+  moveProfile: {fileID: 11400000, guid: 70d41214425449f3a354e6c0290cc14b, type: 2}
   patrolWaypoints: []
   scanInterval: 0.5
   selfScanForTargets: 0
@@ -189,7 +190,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59140cdc447468044929f4eeb7b723d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SteeringAgent
-  steeringProfile: {fileID: 0}
+  steeringProfile: {fileID: 11400000, guid: 2b62e1a24c3626e498a7dee17ba3a484, type: 2}
   behaviorProfile: {fileID: 0}
   seekTarget: {fileID: 0}
   seekTargetRigidbody: {fileID: 0}
@@ -217,8 +218,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1956aee43d3e1a942b741ff05d198a8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FlightController
-  steering: {fileID: 0}
-  flightProfile: {fileID: 0}
+  steering: {fileID: 6429129647895387507}
+  flightProfile: {fileID: 11400000, guid: eb7c2ea91e195f942aa4ca864786c135, type: 2}
 --- !u!114 &4769457962594535506
 MonoBehaviour:
   m_ObjectHideFlags: 0

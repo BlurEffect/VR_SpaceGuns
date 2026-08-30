@@ -1,0 +1,139 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &9211928982918123033
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 0c09ac251643477408db78e7ea0cc7a5, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0c09ac251643477408db78e7ea0cc7a5, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0c09ac251643477408db78e7ea0cc7a5, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0c09ac251643477408db78e7ea0cc7a5, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0c09ac251643477408db78e7ea0cc7a5, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0c09ac251643477408db78e7ea0cc7a5, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0c09ac251643477408db78e7ea0cc7a5, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0c09ac251643477408db78e7ea0cc7a5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0c09ac251643477408db78e7ea0cc7a5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 0c09ac251643477408db78e7ea0cc7a5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 0c09ac251643477408db78e7ea0cc7a5, type: 3}
+      propertyPath: m_Name
+      value: CapticalShipCannon
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0c09ac251643477408db78e7ea0cc7a5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6753470717818360974}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0c09ac251643477408db78e7ea0cc7a5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 914512403514890079}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0c09ac251643477408db78e7ea0cc7a5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3260539974316415240}
+  m_SourcePrefab: {fileID: 100100000, guid: 0c09ac251643477408db78e7ea0cc7a5, type: 3}
+--- !u!1 &8292869964306117448 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 0c09ac251643477408db78e7ea0cc7a5, type: 3}
+  m_PrefabInstance: {fileID: 9211928982918123033}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6753470717818360974
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8292869964306117448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 582b00bda89877043a80db2f139f27e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Targeting
+  rotatorYMain: {fileID: 0}
+  rotatorX: {fileID: 0}
+  rotatorBarrelLeft: {fileID: 0}
+  rotatorBarrelRight: {fileID: 0}
+  muzzleLeft: {fileID: 0}
+  muzzleRight: {fileID: 0}
+  target: {fileID: 0}
+  targetRigidbody: {fileID: 0}
+  yawSpeed: 90
+  barrelYawSpeed: 90
+  pitchSpeed: 60
+  projectileSpeed: 50
+  minPitch: -10
+  maxPitch: 45
+  minYaw: -45
+  maxYaw: 45
+  aimThresholdDegrees: 5
+  lineOfFireBlockers:
+    serializedVersion: 2
+    m_Bits: 0
+--- !u!114 &914512403514890079
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8292869964306117448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42d2b638b2c641541bad86b2422e1b01, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Shooting
+  gunProfile: {fileID: 0}
+  muzzleLeft: {fileID: 0}
+  muzzleRight: {fileID: 0}
+--- !u!114 &3260539974316415240
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8292869964306117448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7537a3a875e9eb84cbd353df3b52cf8f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HealthComponent
+  profile: {fileID: 0}
+  OnShieldsDown:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDestroyed:
+    m_PersistentCalls:
+      m_Calls: []

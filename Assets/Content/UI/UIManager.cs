@@ -1,12 +1,14 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
     [SerializeField] private Image imgContactImage;
-    [SerializeField] private Text textContactName;
-    [SerializeField] private Text textRadioMessage;
+    [SerializeField] private TMP_Text textContactName;
+    [SerializeField] private TMP_Text textRadioMessage;
+    [SerializeField] private Image imgPanelBackground;
     
     private Coroutine radioMessageFadeCoroutine;
     
@@ -15,9 +17,11 @@ public class UIManager : MonoBehaviour
     {
         if (contact != null)
         {
+            imgContactImage.enabled = true;
             imgContactImage.sprite = contact.portrait;
             textContactName.text   = contact.contactName;
         }
+        imgPanelBackground.enabled = true;
         DisplayRadioMessage(message, duration);
     }
 
@@ -35,6 +39,9 @@ public class UIManager : MonoBehaviour
     {
         yield return new WaitForSeconds(duration);
         textRadioMessage.text = "";
+        textContactName.text = "";
+        imgContactImage.enabled = false;
+        imgPanelBackground.enabled = false;
     }
     
 }

@@ -9,18 +9,20 @@ public struct ProjectileData
     public Vector3 direction;
     public float speed;
     public float lifetime;
+    public float effectiveRange;
     public Color color;
     public int projectileID;
     public float shieldDamage;
     public float hullDamage;
 
-    public ProjectileData(int projectileID, Vector3 position, Vector3 direction, float speed, float lifetime, Color color, float shieldDamage, float hullDamage)
+    public ProjectileData(int projectileID, Vector3 position, Vector3 direction, float speed, float lifetime, float effectiveRange, Color color, float shieldDamage, float hullDamage)
     {
         this.projectileID = projectileID;
         this.position = position;
         this.direction = direction;
         this.speed = speed;
         this.lifetime = lifetime;
+        this.effectiveRange = effectiveRange;
         this.color = color;
         this.shieldDamage = shieldDamage;
         this.hullDamage = hullDamage;
@@ -56,10 +58,11 @@ public class ProjectileManager : MonoBehaviour
     
     //--------------------------------------- Management ---------------------------------------------------
 
-    public void SpawnProjectile(Vector3 position, Vector3 direction, float speed, Color color, float lifetime, float shieldDamage, float hullDamage)
+    public void SpawnProjectile(Vector3 position, Vector3 direction, Vector3 scale, float speed, Color color, float effectiveRange, float shieldDamage, float hullDamage)
     {
-        TurretVFXManager.Instance.SpawnTracer(projectileCount, position, direction, speed, color);
-        _projectiles.Add(new ProjectileData(projectileCount, position, direction, speed, lifetime, color, shieldDamage, hullDamage));
+        float lifetime = effectiveRange / speed;
+        TurretVFXManager.Instance.SpawnTracer(projectileCount, position, direction, scale, speed, lifetime, color);
+        _projectiles.Add(new ProjectileData(projectileCount, position, direction, speed, lifetime, effectiveRange, color, shieldDamage, hullDamage));
         projectileCount = (projectileCount + 1) % maxProjectiles;
     }
     

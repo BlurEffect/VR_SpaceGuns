@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3921685869f9a3f4ea6a06d6de5c4fcf, type: 3}
   m_Name: Sensors_Fighter_Blue
   m_EditorClassIdentifier: Assembly-CSharp::ShipSensorProfile
-  detectionRange: 400
+  detectionRange: 5000
   enemyMask:
     serializedVersion: 2
     m_Bits: 128

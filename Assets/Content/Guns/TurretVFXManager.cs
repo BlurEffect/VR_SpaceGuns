@@ -10,6 +10,7 @@ struct TracerData
 {
     public Vector3 position;
     public Vector3 direction;
+    public Vector3 scale;
     public float lifetime;
     public Color color;
     public int id;
@@ -103,7 +104,7 @@ public class TurretVFXManager : MonoBehaviour
     
     
     // start = muzzle position, end = hit point, speed = tracer speed (m/s)
-    public void SpawnTracer(int id, Vector3 start, Vector3 direction, float speed, Color color)
+    public void SpawnTracer(int id, Vector3 start, Vector3 direction, Vector3 scale, float speed, float lifetime, Color color)
     {
         if (tracerVFX == null)
         {
@@ -113,17 +114,19 @@ public class TurretVFXManager : MonoBehaviour
         Vector3 dir = direction;
         float dist = dir.magnitude;
         if (dist <= Mathf.Epsilon) return;
-
+        
         dir /= dist;
+        /*
         float lifetime = dist / Mathf.Max(speed, 0.0001f);
-
+        */
+        
         // reset hit info for the particle
         if (hits[id] == 1)
         {
             hits[id] = 0;
         }
         
-        shots.Add(new TracerData { id = id, position = start, direction = dir * speed, lifetime = lifetime, color = color });
+        shots.Add(new TracerData { id = id, position = start, direction = dir * speed, scale = scale, lifetime = lifetime, color = color });
 
         return;
         

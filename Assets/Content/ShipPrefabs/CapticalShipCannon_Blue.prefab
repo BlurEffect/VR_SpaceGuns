@@ -8,9 +8,45 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 914512403514890079, guid: 0db07bb1e3f3a8e47bd788a9ad4f77f8, type: 3}
+      propertyPath: gunProfile
+      value: 
+      objectReference: {fileID: 11400000, guid: 1161dc18195431043b208c12986cb72a, type: 2}
+    - target: {fileID: 2016295639519786861, guid: 0db07bb1e3f3a8e47bd788a9ad4f77f8, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2820239104991600892, guid: 0db07bb1e3f3a8e47bd788a9ad4f77f8, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3122344491638817301, guid: 0db07bb1e3f3a8e47bd788a9ad4f77f8, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6169242096492382900, guid: 0db07bb1e3f3a8e47bd788a9ad4f77f8, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6707107549656088895, guid: 0db07bb1e3f3a8e47bd788a9ad4f77f8, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6753470717818360974, guid: 0db07bb1e3f3a8e47bd788a9ad4f77f8, type: 3}
+      propertyPath: lineOfFireBlockers.m_Bits
+      value: 64
+      objectReference: {fileID: 0}
     - target: {fileID: 8292869964306117448, guid: 0db07bb1e3f3a8e47bd788a9ad4f77f8, type: 3}
       propertyPath: m_Name
-      value: CapticalShipCannon
+      value: CapticalShipCannon_Blue
+      objectReference: {fileID: 0}
+    - target: {fileID: 8292869964306117448, guid: 0db07bb1e3f3a8e47bd788a9ad4f77f8, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8511259724092146102, guid: 0db07bb1e3f3a8e47bd788a9ad4f77f8, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8673336840113662450, guid: 0db07bb1e3f3a8e47bd788a9ad4f77f8, type: 3}
       propertyPath: m_LocalPosition.x

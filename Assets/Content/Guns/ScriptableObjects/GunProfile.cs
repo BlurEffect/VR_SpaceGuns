@@ -15,7 +15,7 @@ public class GunProfile : ScriptableObject
     public int projectilesPerBurst = 3;
     public float burstInterval = 0.1f;
 
-    [Header("Projectile")]
+    [Header("Projectile")] public Vector3 projectileSize = new Vector3(1.0f, 1.0f, 12.0f);
     public float projectileSpeed = 100f;
     public float projectileLifetime = 5f;
     public float effectiveRange = 500f;

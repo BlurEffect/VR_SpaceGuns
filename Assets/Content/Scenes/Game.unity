@@ -703,6 +703,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1622003047}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &337788208
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 337788209}
+  m_Layer: 0
+  m_Name: Blue_ReinforcementMovementTarget
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &337788209
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 337788208}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1500, y: 200, z: 100000}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &341964509
 GameObject:
   m_ObjectHideFlags: 0
@@ -999,7 +1030,7 @@ Transform:
   m_GameObject: {fileID: 444203390}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4000, y: 0, z: 100000}
+  m_LocalPosition: {x: -3000, y: 0, z: 100000}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1010,6 +1041,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5262507597421479935, guid: be8d7da4265996f4eb3b491b67664b9a, type: 3}
   m_PrefabInstance: {fileID: 1578066143}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &501943081
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 501943082}
+  m_Layer: 6
+  m_Name: DogfightContainmentAnchor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &501943082
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 501943081}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 200, z: -150}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1309871170}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &505717755
 GameObject:
   m_ObjectHideFlags: 0
@@ -2600,7 +2662,7 @@ Transform:
   m_GameObject: {fileID: 1493698898}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4000, y: 0, z: 2500}
+  m_LocalPosition: {x: -3000, y: 0, z: 2000}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2700,7 +2762,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1540117595}
   m_Layer: 0
-  m_Name: Blue_MovementTarget
+  m_Name: Blue_PlayerMovementTarget
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2807,11 +2869,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 152243110691002987, guid: be8d7da4265996f4eb3b491b67664b9a, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1206775458844448327, guid: be8d7da4265996f4eb3b491b67664b9a, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1702265909224843800, guid: be8d7da4265996f4eb3b491b67664b9a, type: 3}
       propertyPath: m_Name
@@ -2819,7 +2881,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3185125534505451447, guid: be8d7da4265996f4eb3b491b67664b9a, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3958330098683065988, guid: be8d7da4265996f4eb3b491b67664b9a, type: 3}
+      propertyPath: m_Name
+      value: Turret_Slot_04_Player
       objectReference: {fileID: 0}
     - target: {fileID: 6135039290281403693, guid: be8d7da4265996f4eb3b491b67664b9a, type: 3}
       propertyPath: m_Enabled
@@ -2827,11 +2893,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6813131597981104260, guid: be8d7da4265996f4eb3b491b67664b9a, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7928469202147946724, guid: be8d7da4265996f4eb3b491b67664b9a, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8432610433693230696, guid: be8d7da4265996f4eb3b491b67664b9a, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2891,6 +2957,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8432610433693230696, guid: be8d7da4265996f4eb3b491b67664b9a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1848754626}
+    - targetCorrespondingSourceObject: {fileID: 8432610433693230696, guid: be8d7da4265996f4eb3b491b67664b9a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 501943082}
     - targetCorrespondingSourceObject: {fileID: 5262507597421479935, guid: be8d7da4265996f4eb3b491b67664b9a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 599682417}
@@ -2899,6 +2968,17 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1013581552}
   m_SourcePrefab: {fileID: 100100000, guid: be8d7da4265996f4eb3b491b67664b9a, type: 3}
+--- !u!114 &1578066144 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1998506490564832029, guid: be8d7da4265996f4eb3b491b67664b9a, type: 3}
+  m_PrefabInstance: {fileID: 1578066143}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0619c9edabbef404fb6bcf84ec943c6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HangarBay
 --- !u!1 &1586788421
 GameObject:
   m_ObjectHideFlags: 0
@@ -2945,7 +3025,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FactionManager
   ships:
-  - {fileID: 0}
   - {fileID: 0}
   patrolRouteRoot: {fileID: 856831529}
   initialEnemies:
@@ -3392,15 +3471,11 @@ MonoBehaviour:
   enemySpawnPoint: {fileID: 1493698899}
   enemyBattlePosition: {fileID: 444203391}
   reinforcementEntryPoint: {fileID: 2106772998}
-  redFighterSpawnRoot: {fileID: 0}
-  blueFighterSpawnRoot: {fileID: 0}
-  reinforcementSpawnRoot: {fileID: 0}
+  reinforcementBattlePosition: {fileID: 337788209}
+  playerHangarBay: {fileID: 1578066144}
+  dogfightContainmentAnchor: {fileID: 501943082}
   prefabEnemyCruiser: {fileID: 1702265909224843800, guid: 8a981ec42a66e4e4fbec8449c21c8eeb, type: 3}
-  prefabFighterRed: {fileID: 2221735864203466575, guid: 74ac3d184b7631b4ba57823ca2cc73de, type: 3}
-  prefabDroneRed: {fileID: 0}
-  prefabFighterBlue: {fileID: 2221735864203466575, guid: deb3f0315e858644abc677ca97b3284c, type: 3}
-  prefabReinforcementCruiser: {fileID: 0}
-  prefabReinforcementFighter: {fileID: 2221735864203466575, guid: deb3f0315e858644abc677ca97b3284c, type: 3}
+  prefabReinforcementCruiser: {fileID: 1702265909224843800, guid: cfd7df6069aa2354cb4f6c1dc2ee48a2, type: 3}
   menuManager: {fileID: 1981031079}
   gameCamera: {fileID: 599682416}
   gameCameraAddons: {fileID: 1097514714}
@@ -3409,14 +3484,13 @@ MonoBehaviour:
   chatterLibrary: {fileID: 11400000, guid: 0645a91cfda2eaa4793f56831dae3228, type: 2}
   patrolDuration: 5
   sensorContactDuration: 5
-  battleDuration: 300
-  enemyRespawnInterval: 25
+  battleDuration: 30
   initialRedFighters: 4
   initialRedDrones: 2
-  initialBlueFighters: 3
-  maxRedFighters: 6
-  maxRedDrones: 3
+  initialBlueFighters: 2
+  initialBlueDrones: 2
   reinforcementFighters: 4
+  reinforcementDrones: 2
   healthTriggerThreshold: 0.3
 --- !u!4 &1959946159
 Transform:
@@ -3738,7 +3812,7 @@ Transform:
   m_GameObject: {fileID: 2106772997}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1365, y: 0, z: 1117}
+  m_LocalPosition: {x: 1500, y: 200, z: 300}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3794,4 +3868,5 @@ SceneRoots:
   - {fileID: 739389206}
   - {fileID: 1168014694}
   - {fileID: 1540117595}
+  - {fileID: 337788209}
   - {fileID: 444203391}

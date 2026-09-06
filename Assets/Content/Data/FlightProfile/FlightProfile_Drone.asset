@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5b0fabf706213a4c838ebb0c7629d49, type: 3}
+  m_Name: FlightProfile_Drone
+  m_EditorClassIdentifier: Assembly-CSharp::ShipFlightProfile
+  maxSpeed: 50
+  acceleration: 25
+  turnRate: 4
+  driftDamping: 0
+  driftDampingFactor: 1
+  bankAmount: 60
+  bankSmooth: 3

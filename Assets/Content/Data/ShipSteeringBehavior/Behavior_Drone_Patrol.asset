@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a656244f4e0b5164281a2a0589ccc11f, type: 3}
+  m_Name: Behavior_Drone_Patrol
+  m_EditorClassIdentifier: Assembly-CSharp::ShipSteeringProfile
+  seekWeight: 0
+  fleeWeight: 0
+  arriveWeight: 1
+  wanderWeight: 0
+  avoidWeight: 0
+  cohesionWeight: 0
+  separationWeight: 0.4
+  alignmentWeight: 0
+  orbitWeight: 0
+  pursueWeight: 0
+  evadeWeight: 0
+  attackRunWeight: 0
+  containmentWeight: 0.5
+  formationWeight: 0
+  patrolWeight: 1
+  attackRange: 20
+  breakOffRange: 5

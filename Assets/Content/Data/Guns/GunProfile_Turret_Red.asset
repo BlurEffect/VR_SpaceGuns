@@ -16,7 +16,8 @@ MonoBehaviour:
   cooldownInterval: 0.5
   projectilesPerBurst: 3
   burstInterval: 0.1
-  projectileSpeed: 100
+  projectileSize: {x: 0.1, y: 1.2, z: 0.1}
+  projectileSpeed: 200
   projectileLifetime: 5
   effectiveRange: 500
   projectileColor: {r: 23.968628, g: 8.933776, b: 0, a: 1}

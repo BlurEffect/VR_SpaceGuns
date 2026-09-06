@@ -799,10 +799,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Targeting
   rotatorYMain: {fileID: 5653890616936266358}
   rotatorX: {fileID: 3792680629522263206}
-  rotatorBarrelLeft: {fileID: 1081480737324637895}
-  rotatorBarrelRight: {fileID: 6574972241230945806}
-  muzzleLeft: {fileID: 1439566781232045849}
-  muzzleRight: {fileID: 3892187179854428803}
+  barrels:
+  - yawRotator: {fileID: 1081480737324637895}
+    muzzle: {fileID: 1439566781232045849}
+  - yawRotator: {fileID: 6574972241230945806}
+    muzzle: {fileID: 3892187179854428803}
   target: {fileID: 0}
   targetRigidbody: {fileID: 0}
   yawSpeed: 90
@@ -826,8 +827,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Shooting
   gunProfile: {fileID: 11400000, guid: cc08bf1a50e6d2a4f87ab6333e041883, type: 2}
-  muzzleLeft: {fileID: 1439566781232045849}
-  muzzleRight: {fileID: 3892187179854428803}
+  targeting: {fileID: 2922389265968942708}
 --- !u!114 &2474410778038646958
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -33,6 +33,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2100000, guid: ea2ed76a5aefa1f44beb871e871a7a7a, type: 2}
     - target: {fileID: 4801838018848750828, guid: 8f99d3454eb230945b15c199f52f8700, type: 3}
+      propertyPath: targeting
+      value: 
+      objectReference: {fileID: 9108650512166002159}
+    - target: {fileID: 4801838018848750828, guid: 8f99d3454eb230945b15c199f52f8700, type: 3}
       propertyPath: gunProfile
       value: 
       objectReference: {fileID: 11400000, guid: 3e1f1e52e409b994297af3f75116eaeb, type: 2}
@@ -121,3 +125,14 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8f99d3454eb230945b15c199f52f8700, type: 3}
+--- !u!114 &9108650512166002159 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 417621458434883588, guid: 8f99d3454eb230945b15c199f52f8700, type: 3}
+  m_PrefabInstance: {fileID: 8909208448055516651}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 582b00bda89877043a80db2f139f27e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Targeting

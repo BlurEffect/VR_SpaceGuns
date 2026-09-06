@@ -190,10 +190,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Targeting
   rotatorYMain: {fileID: 0}
   rotatorX: {fileID: 0}
-  rotatorBarrelLeft: {fileID: 6746455280443778079}
-  rotatorBarrelRight: {fileID: 8538226347536478164}
-  muzzleLeft: {fileID: 1136925562864294726}
-  muzzleRight: {fileID: 8683287863449793345}
+  barrels:
+  - yawRotator: {fileID: 6746455280443778079}
+    muzzle: {fileID: 1136925562864294726}
+  - yawRotator: {fileID: 8538226347536478164}
+    muzzle: {fileID: 8683287863449793345}
   target: {fileID: 0}
   targetRigidbody: {fileID: 0}
   yawSpeed: 90
@@ -221,8 +222,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Shooting
   gunProfile: {fileID: 11400000, guid: 9fe1e92e16313e047924ff6e25fbe1c4, type: 2}
-  muzzleLeft: {fileID: 1136925562864294726}
-  muzzleRight: {fileID: 8683287863449793345}
+  targeting: {fileID: 0}
 --- !u!4 &6746455280443778079 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -5469694750792608790, guid: f7c4c6f2b1ee9f645ba20c832f006358, type: 3}
@@ -253,7 +253,7 @@ MonoBehaviour:
   fleeTargetRigidbody: {fileID: 0}
   orbitRadius: 10
   containmentCenter: {fileID: 0}
-  containmentRadius: 50
+  containmentRadius: 300
   containmentLookAheadTime: 1.5
   formationLeader: {fileID: 0}
   formationOffset: {x: 0, y: 0, z: 0}
@@ -327,11 +327,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ef04dd89cecd14449062749115551bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShipAI
+  shipClass: 0
   sensorProfile: {fileID: 0}
   attackProfile: {fileID: 11400000, guid: 33241859cf3e92845933b6faf15acc77, type: 2}
   patrolProfile: {fileID: 11400000, guid: 39a2ede5b2dddce419db654b57a92819, type: 2}
+  moveProfile: {fileID: 0}
   patrolWaypoints: []
   scanInterval: 0.5
+  selfScanForTargets: 1
   primaryMounts:
   - targeting: {fileID: 417621458434883588}
     shooting: {fileID: 4801838018848750828}

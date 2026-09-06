@@ -24,7 +24,7 @@ MonoBehaviour:
   pursueWeight: 0
   evadeWeight: 0
   attackRunWeight: 1
-  containmentWeight: 0.2
+  containmentWeight: 1
   formationWeight: 0
   patrolWeight: 0
   attackRange: 100

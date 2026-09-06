@@ -5,8 +5,7 @@ public class Shooting : MonoBehaviour
     [SerializeField] private GunProfile gunProfile;
     public GunProfile GunProfile => gunProfile;
 
-    [SerializeField] private Transform muzzleLeft;
-    [SerializeField] private Transform muzzleRight;
+    [SerializeField] private Targeting targeting;
 
     private float _cooldownTimer = float.MaxValue;
     private float _burstTimer;
@@ -47,16 +46,17 @@ public class Shooting : MonoBehaviour
 
     private void FireShot()
     {
-        ProjectileManager.Instance.SpawnProjectile(
-            muzzleRight.position, muzzleRight.forward,
-            gunProfile.projectileSpeed, gunProfile.projectileColor,
-            gunProfile.projectileLifetime,
-            gunProfile.shieldDamage, gunProfile.hullDamage);
+        if (targeting == null) return;
 
-        ProjectileManager.Instance.SpawnProjectile(
-            muzzleLeft.position, muzzleLeft.forward,
-            gunProfile.projectileSpeed, gunProfile.projectileColor,
-            gunProfile.projectileLifetime,
-            gunProfile.shieldDamage, gunProfile.hullDamage);
+        foreach (Barrel b in targeting.Barrels)
+        {
+            if (b.muzzle == null) continue;
+
+            ProjectileManager.Instance.SpawnProjectile(
+                b.muzzle.position, b.muzzle.forward, gunProfile.projectileSize,
+                gunProfile.projectileSpeed, gunProfile.projectileColor,
+                gunProfile.effectiveRange,
+                gunProfile.shieldDamage, gunProfile.hullDamage);
+        }
     }
 }

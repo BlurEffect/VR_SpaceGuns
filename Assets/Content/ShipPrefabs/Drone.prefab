@@ -1,0 +1,271 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &8549568235914528155
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: dcb48fe5284706c48a3270df60ab68c8, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: dcb48fe5284706c48a3270df60ab68c8, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: dcb48fe5284706c48a3270df60ab68c8, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: dcb48fe5284706c48a3270df60ab68c8, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: dcb48fe5284706c48a3270df60ab68c8, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: dcb48fe5284706c48a3270df60ab68c8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: dcb48fe5284706c48a3270df60ab68c8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: dcb48fe5284706c48a3270df60ab68c8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: dcb48fe5284706c48a3270df60ab68c8, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: a295d6a8739cf7a4d9e0588020d4e92e, type: 2}
+    - target: {fileID: -7511558181221131132, guid: dcb48fe5284706c48a3270df60ab68c8, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 509aae7c5f2eeec4ea245cb5e99a3d6c, type: 2}
+    - target: {fileID: -5669605951974877732, guid: dcb48fe5284706c48a3270df60ab68c8, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: -5666925384312797972, guid: dcb48fe5284706c48a3270df60ab68c8, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 509aae7c5f2eeec4ea245cb5e99a3d6c, type: 2}
+    - target: {fileID: -2670674360876551122, guid: dcb48fe5284706c48a3270df60ab68c8, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: dcb48fe5284706c48a3270df60ab68c8, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6221266550044252168, guid: dcb48fe5284706c48a3270df60ab68c8, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7896193647555897729, guid: dcb48fe5284706c48a3270df60ab68c8, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: dcb48fe5284706c48a3270df60ab68c8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4931442007310021495}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: dcb48fe5284706c48a3270df60ab68c8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3290713439782352683}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: dcb48fe5284706c48a3270df60ab68c8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 532493691958520609}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: dcb48fe5284706c48a3270df60ab68c8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8084389511833455023}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: dcb48fe5284706c48a3270df60ab68c8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1090254897677841451}
+    - targetCorrespondingSourceObject: {fileID: 6221266550044252168, guid: dcb48fe5284706c48a3270df60ab68c8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3710159385539094671}
+    - targetCorrespondingSourceObject: {fileID: 6221266550044252168, guid: dcb48fe5284706c48a3270df60ab68c8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 916543712506780842}
+  m_SourcePrefab: {fileID: 100100000, guid: dcb48fe5284706c48a3270df60ab68c8, type: 3}
+--- !u!1 &2373480516659600787 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6221266550044252168, guid: dcb48fe5284706c48a3270df60ab68c8, type: 3}
+  m_PrefabInstance: {fileID: 8549568235914528155}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3710159385539094671
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2373480516659600787}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 582b00bda89877043a80db2f139f27e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Targeting
+  rotatorYMain: {fileID: 0}
+  rotatorX: {fileID: 0}
+  barrels:
+  - yawRotator: {fileID: 6791476611107832617}
+    muzzle: {fileID: 4191668884976219723}
+  target: {fileID: 0}
+  targetRigidbody: {fileID: 0}
+  yawSpeed: 90
+  barrelYawSpeed: 90
+  pitchSpeed: 60
+  projectileSpeed: 50
+  minPitch: -10
+  maxPitch: 45
+  minYaw: -45
+  maxYaw: 45
+  aimThresholdDegrees: 5
+  lineOfFireBlockers:
+    serializedVersion: 2
+    m_Bits: 0
+--- !u!114 &916543712506780842
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2373480516659600787}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42d2b638b2c641541bad86b2422e1b01, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Shooting
+  gunProfile: {fileID: 11400000, guid: 23bf720a3d3824b4bb5970dea0a7b7ef, type: 2}
+  targeting: {fileID: 3710159385539094671}
+--- !u!4 &4191668884976219723 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -3707052213043547184, guid: dcb48fe5284706c48a3270df60ab68c8, type: 3}
+  m_PrefabInstance: {fileID: 8549568235914528155}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &6791476611107832617 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2947044096777307826, guid: dcb48fe5284706c48a3270df60ab68c8, type: 3}
+  m_PrefabInstance: {fileID: 8549568235914528155}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &8820091867902982346 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: dcb48fe5284706c48a3270df60ab68c8, type: 3}
+  m_PrefabInstance: {fileID: 8549568235914528155}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4931442007310021495
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8820091867902982346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59140cdc447468044929f4eeb7b723d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SteeringAgent
+  steeringProfile: {fileID: 11400000, guid: 99218a05d3745a940a7833f5264ab995, type: 2}
+  behaviorProfile: {fileID: 11400000, guid: 5f6cbfd1263ae5449b058c12e87f65f9, type: 2}
+  seekTarget: {fileID: 0}
+  seekTargetRigidbody: {fileID: 0}
+  fleeTarget: {fileID: 0}
+  fleeTargetRigidbody: {fileID: 0}
+  orbitRadius: 10
+  containmentCenter: {fileID: 0}
+  containmentRadius: 300
+  containmentLookAheadTime: 1.5
+  formationLeader: {fileID: 0}
+  formationOffset: {x: 0, y: 0, z: 0}
+  groupCenter: {x: 0, y: 0, z: 0}
+  groupDirection: {x: 0, y: 0, z: 0}
+  neighborPosition: {x: 0, y: 0, z: 0}
+  patrolWaypoints: []
+--- !u!114 &3290713439782352683
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8820091867902982346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1956aee43d3e1a942b741ff05d198a8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpaceshipMovement
+  steering: {fileID: 4931442007310021495}
+  flightProfile: {fileID: 11400000, guid: a8ccdb60d652fef478136abd34d2696a, type: 2}
+--- !u!65 &532493691958520609
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8820091867902982346}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 6, y: 1.25, z: 9}
+  m_Center: {x: 0, y: 0.125, z: 0}
+--- !u!114 &8084389511833455023
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8820091867902982346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7537a3a875e9eb84cbd353df3b52cf8f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HealthComponent
+  profile: {fileID: 11400000, guid: 0023b482e663bd141952e0b8fe78fecb, type: 2}
+  OnShieldsDown:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDestroyed:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &1090254897677841451
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8820091867902982346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ef04dd89cecd14449062749115551bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ShipAI
+  shipClass: 0
+  sensorProfile: {fileID: 0}
+  attackProfile: {fileID: 11400000, guid: 988eea5c7bb819142bd2ae011d2c7cd2, type: 2}
+  patrolProfile: {fileID: 11400000, guid: d43cbdfa904e017469af87085eeed911, type: 2}
+  moveProfile: {fileID: 0}
+  patrolWaypoints: []
+  scanInterval: 0.5
+  selfScanForTargets: 1
+  primaryMounts:
+  - targeting: {fileID: 3710159385539094671}
+    shooting: {fileID: 916543712506780842}
+  pointDefenseMounts: []

@@ -1,15 +1,22 @@
+using System.Collections.Generic;
 using UnityEngine;
+
+[System.Serializable]
+public struct Barrel
+{
+    public Transform yawRotator; // optional independent per-barrel yaw pivot; null = no independent yaw
+    public Transform muzzle;     // required fire origin/direction
+}
 
 public class Targeting : MonoBehaviour
 {
     [Header("Turret Parts")]
     [SerializeField] private Transform rotatorYMain;   // Base - rotates horizontally (yaw)
     [SerializeField] private Transform rotatorX;       // Barrel - rotates vertically (pitch)
-    [SerializeField] private Transform rotatorBarrelLeft;       // Barrel - rotates vertically (pitch)
-    [SerializeField] private Transform rotatorBarrelRight;       // Barrel - rotates vertically (pitch)
 
-    [SerializeField] private Transform muzzleLeft;       // Barrel - rotates vertically (pitch)
-    [SerializeField] private Transform muzzleRight;       // Barrel - rotates vertically (pitch)
+    [Header("Barrels")]
+    [SerializeField] private Barrel[] barrels;
+    public IReadOnlyList<Barrel> Barrels => barrels;
 
     [Header("Target Settings")]
     public Transform target;
@@ -71,8 +78,18 @@ public class Targeting : MonoBehaviour
         if (rotatorX != null)
         {
             Vector3 midRef = rotatorX.position;
-            if (rotatorBarrelLeft != null && rotatorBarrelRight != null)
-                midRef = (rotatorBarrelLeft.position + rotatorBarrelRight.position) * 0.5f;
+            if (barrels != null)
+            {
+                Vector3 sum = Vector3.zero;
+                int count = 0;
+                foreach (Barrel b in barrels)
+                {
+                    if (b.yawRotator == null) continue;
+                    sum += b.yawRotator.position;
+                    count++;
+                }
+                if (count > 0) midRef = sum / count;
+            }
 
             Vector3 localDirPitch = rotatorX.parent.InverseTransformDirection(predictedTargetPos - midRef);
             float   targetPitch   = Mathf.Clamp(-Mathf.Atan2(localDirPitch.y, localDirPitch.z) * Mathf.Rad2Deg, minPitch, maxPitch);
@@ -82,25 +99,39 @@ public class Targeting : MonoBehaviour
         }
 
         // --- STEP 4: Per-barrel yaw ---
-        if (rotatorBarrelLeft != null && rotatorBarrelRight != null)
+        if (barrels != null)
         {
-            Vector3 localDirLeft  = rotatorBarrelLeft.parent.InverseTransformDirection(predictedTargetPos - rotatorBarrelLeft.position);
-            Vector3 localDirRight = rotatorBarrelRight.parent.InverseTransformDirection(predictedTargetPos - rotatorBarrelRight.position);
+            foreach (Barrel b in barrels)
+            {
+                if (b.yawRotator == null) continue;
 
-            float yawLeft  = Mathf.Clamp(Mathf.Atan2(localDirLeft.x,  localDirLeft.z)  * Mathf.Rad2Deg, minYaw, maxYaw);
-            float yawRight = Mathf.Clamp(Mathf.Atan2(localDirRight.x, localDirRight.z) * Mathf.Rad2Deg, minYaw, maxYaw);
+                Vector3 localDir = b.yawRotator.parent.InverseTransformDirection(predictedTargetPos - b.yawRotator.position);
+                float   yaw      = Mathf.Clamp(Mathf.Atan2(localDir.x, localDir.z) * Mathf.Rad2Deg, minYaw, maxYaw);
 
-            rotatorBarrelLeft.localRotation  = Quaternion.RotateTowards(
-                rotatorBarrelLeft.localRotation,  Quaternion.Euler(0f, yawLeft,  0f), barrelYawSpeed * Time.deltaTime);
-            rotatorBarrelRight.localRotation = Quaternion.RotateTowards(
-                rotatorBarrelRight.localRotation, Quaternion.Euler(0f, yawRight, 0f), barrelYawSpeed * Time.deltaTime);
+                b.yawRotator.localRotation = Quaternion.RotateTowards(
+                    b.yawRotator.localRotation, Quaternion.Euler(0f, yaw, 0f), barrelYawSpeed * Time.deltaTime);
+            }
         }
 
         // --- Aim & line-of-fire check ---
-        if (muzzleLeft != null && muzzleRight != null)
+        Vector3 posSum = Vector3.zero;
+        Vector3 fwdSum = Vector3.zero;
+        int     muzzleCount = 0;
+        if (barrels != null)
         {
-            Vector3 muzzleMid     = (muzzleLeft.position + muzzleRight.position) * 0.5f;
-            Vector3 muzzleForward = (muzzleLeft.forward  + muzzleRight.forward).normalized;
+            foreach (Barrel b in barrels)
+            {
+                if (b.muzzle == null) continue;
+                posSum += b.muzzle.position;
+                fwdSum += b.muzzle.forward;
+                muzzleCount++;
+            }
+        }
+
+        if (muzzleCount > 0)
+        {
+            Vector3 muzzleMid     = posSum / muzzleCount;
+            Vector3 muzzleForward = fwdSum.normalized;
             Vector3 toTarget      = predictedTargetPos - muzzleMid;
 
             IsAimed     = Vector3.Angle(muzzleForward, toTarget.normalized) <= aimThresholdDegrees;

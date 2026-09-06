@@ -66,6 +66,21 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 3260539974316415240}
   m_SourcePrefab: {fileID: 100100000, guid: 0c09ac251643477408db78e7ea0cc7a5, type: 3}
+--- !u!4 &690831509378282321 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -702267961010389688, guid: 0c09ac251643477408db78e7ea0cc7a5, type: 3}
+  m_PrefabInstance: {fileID: 9211928982918123033}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &748823075137985749 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -742247293293243700, guid: 0c09ac251643477408db78e7ea0cc7a5, type: 3}
+  m_PrefabInstance: {fileID: 9211928982918123033}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1939497922605383312 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7295026071944409225, guid: 0c09ac251643477408db78e7ea0cc7a5, type: 3}
+  m_PrefabInstance: {fileID: 9211928982918123033}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &8292869964306117448 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 0c09ac251643477408db78e7ea0cc7a5, type: 3}
@@ -83,20 +98,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 582b00bda89877043a80db2f139f27e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Targeting
-  rotatorYMain: {fileID: 0}
-  rotatorX: {fileID: 0}
-  rotatorBarrelLeft: {fileID: 0}
-  rotatorBarrelRight: {fileID: 0}
-  muzzleLeft: {fileID: 0}
-  muzzleRight: {fileID: 0}
+  rotatorYMain: {fileID: 690831509378282321}
+  rotatorX: {fileID: 1939497922605383312}
+  barrels:
+  - yawRotator: {fileID: 690831509378282321}
+    muzzle: {fileID: 748823075137985749}
   target: {fileID: 0}
   targetRigidbody: {fileID: 0}
-  yawSpeed: 90
-  barrelYawSpeed: 90
-  pitchSpeed: 60
-  projectileSpeed: 50
-  minPitch: -10
-  maxPitch: 45
+  yawSpeed: 45
+  barrelYawSpeed: 45
+  pitchSpeed: 30
+  projectileSpeed: 25
+  minPitch: -30
+  maxPitch: 30
   minYaw: -45
   maxYaw: 45
   aimThresholdDegrees: 5
@@ -116,8 +130,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Shooting
   gunProfile: {fileID: 0}
-  muzzleLeft: {fileID: 0}
-  muzzleRight: {fileID: 0}
+  targeting: {fileID: 6753470717818360974}
 --- !u!114 &3260539974316415240
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -130,7 +143,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7537a3a875e9eb84cbd353df3b52cf8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HealthComponent
-  profile: {fileID: 0}
+  profile: {fileID: 11400000, guid: a438b8893ddca74488ecd98f7fb18d78, type: 2}
   OnShieldsDown:
     m_PersistentCalls:
       m_Calls: []
